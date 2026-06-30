@@ -2,7 +2,7 @@
 // คำอธิบาย: ไฟล์เก็บข้อมูลคำศัพท์ ใช้รูปแบบ ES Module (export)
 // Description: Vocabulary data module using ES export syntax.
 
-export const flashcards = [
+window.flashcardsData = [
 // --- ชุดที่ 1: Oxford 3000 (A - Part 1) ---
     {
         id: 101,

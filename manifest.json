@@ -1,6 +1,6 @@
 {
-  "name": "Oxford 3000 Flashcards",
-  "short_name": "VocabCards",
+  "name": "my fee",
+  "short_name": "my fee",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f3f4f6",

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Oxford 3000 Flashcards PWA</title>
+    <title>my fee</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192x192.png">
@@ -12,12 +12,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class', // เปิดใช้ Dark Mode แบบ Manual Toggle
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                         thai: ['Sarabun', 'sans-serif'],
+                    },
+                    colors: {
+                        gray: {
+                            750: '#2d3748',
+                        }
                     }
                 }
             }
@@ -30,8 +35,29 @@
 </head>
 <body class="h-screen flex flex-col overflow-hidden bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 select-none font-sans transition-colors duration-300">
 
+    <!-- 0. HOME VIEW -->
+    <div id="view-home" class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+        <i class="fa-solid fa-house text-6xl text-blue-500 mb-6 drop-shadow-lg"></i>
+        <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">my fee</h1>
+        <p class="text-gray-500 dark:text-gray-400 mb-8">Welcome to your personal dashboard.</p>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm w-full max-w-sm">
+            <h3 class="font-bold text-gray-700 dark:text-gray-200 mb-2">Today's Progress</h3>
+            <div class="flex justify-between items-center text-sm mb-2">
+                <span class="text-gray-500 dark:text-gray-400">Words Practiced</span>
+                <span id="homeCardsFlipped" class="font-bold text-blue-600">0</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-500 dark:text-gray-400">Current Streak</span>
+                <span class="font-bold text-orange-500"><i class="fa-solid fa-fire"></i> <span id="homeStreak">0</span> days</span>
+            </div>
+            <button onclick="switchTab('flashcards')" class="mt-6 w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition-colors">Continue Practice</button>
+        </div>
+    </div>
+
+    <!-- 1. FLASHCARDS VIEW -->
+    <div id="view-flashcards" class="flex-1 flex flex-col hidden h-full w-full overflow-hidden">
     <!-- HEADER -->
-    <header class="bg-white dark:bg-gray-800 shadow-sm p-4 z-10 sticky top-0 transition-colors duration-300">
+    <header class="bg-white dark:bg-gray-800 shadow-sm p-4 z-20 sticky top-0 transition-colors duration-300">
         <div class="max-w-md mx-auto flex flex-col gap-3">
             <div class="flex items-center gap-3">
                 <div class="bg-blue-600 text-white p-2 rounded-lg shadow-md">
@@ -44,21 +70,35 @@
                         class="w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-full focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all placeholder-gray-400 text-sm">
                 </div>
 
-                <!-- Settings Button -->
-                <button id="settingsBtn" class="p-2 text-gray-500 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                    <i class="fa-solid fa-gear text-xl"></i>
-                </button>
+                <div class="flex items-center text-orange-500 font-bold px-2" title="Daily Streak">
+                    <i class="fa-solid fa-fire mr-1"></i> <span id="streakCount">0</span>
+                </div>
+            </div>
+
+            <!-- Counters & Progress -->
+             <div class="flex flex-col gap-2 px-1">
+                <div class="flex justify-between items-center text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500 font-bold">
+                    <span>Card: <span id="currentIndex" class="text-blue-600 dark:text-blue-400">0</span> / <span id="totalCards">0</span></span>
+                    <span>Learned: <span id="learnedCount" class="text-green-600">0</span> (<span id="progressPercent">0</span>%)</span>
+                </div>
+                <div class="w-full h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div id="progressBar" class="h-full bg-green-500 transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Filter Bar (Levels) -->
+            <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar" id="levelFilterBar">
+                <button data-level="All" class="lvl-btn active">All Levels</button>
+                <button data-level="A1" class="lvl-btn">A1</button>
+                <button data-level="A2" class="lvl-btn">A2</button>
+                <button data-level="B1" class="lvl-btn">B1</button>
+                <button data-level="B2" class="lvl-btn">B2</button>
+                <button data-level="Fav" class="lvl-btn text-yellow-600 dark:text-yellow-400"><i class="fa-solid fa-star mr-1"></i> Stars</button>
             </div>
 
             <!-- Category Bar -->
-            <div class="flex gap-2 overflow-x-auto pb-1" id="categoryList">
+            <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar" id="categoryList">
                 <!-- JS populates buttons -->
-            </div>
-            
-            <!-- Counters -->
-             <div class="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 px-1">
-                <span>Card: <span id="currentIndex" class="font-bold">0</span>/<span id="totalCards">0</span></span>
-                <span class="text-green-600 dark:text-green-400">Learned: <span id="learnedCount">0</span></span>
             </div>
         </div>
     </header>
@@ -70,7 +110,7 @@
         <div id="msgContainer" class="hidden absolute flex-col items-center justify-center text-center z-0">
             <i id="msgIcon" class="fa-solid fa-check-circle text-5xl text-green-500 mb-3"></i>
             <p id="msgText" class="text-gray-500 dark:text-gray-400 text-lg font-thai">All words learned!</p>
-            <button id="resetLearnedBtn" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-full text-sm shadow-lg hover:bg-blue-700 hidden">
+            <button id="resetLearnedBtn" class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-full text-sm shadow-lg hover:bg-blue-700 transition-all">
                 Reset Progress
             </button>
         </div>
@@ -83,30 +123,36 @@
                 <div class="absolute inset-0 w-full h-full backface-hidden flex flex-col justify-between p-8 rounded-3xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
                     <div class="flex justify-between items-start">
                         <span id="cardLevel" class="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-xs px-2 py-1 rounded-full font-bold uppercase">--</span>
-                        <div class="flex gap-2">
-                             <!-- Mark as Learned Button -->
+                        <div class="flex gap-1">
+                            <button id="starBtn" class="text-gray-300 hover:text-yellow-500 transition-colors p-2" title="Add to Favorites">
+                                <i class="fa-solid fa-star text-2xl"></i>
+                            </button>
                             <button id="markLearnedBtn" class="text-gray-300 hover:text-green-500 transition-colors p-2" title="Mark as Learned">
                                 <i class="fa-regular fa-circle-check text-2xl"></i>
                             </button>
                             <button id="speakBtnFront" class="text-gray-400 hover:text-blue-500 transition-colors p-2 active:scale-95">
                                 <i class="fa-solid fa-volume-high text-2xl"></i>
                             </button>
+                            <button id="micBtnFront" class="text-gray-400 hover:text-red-500 transition-colors p-2 active:scale-95" title="Practice Pronunciation">
+                                <i class="fa-solid fa-microphone text-2xl"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="text-center mt-4">
-                        <h1 id="cardWord" class="text-5xl font-bold text-gray-800 dark:text-white mb-2 tracking-tight break-words">Word</h1>
+                    <div class="text-center mt-4 relative">
+                        <h1 id="cardWord" class="text-5xl font-bold text-gray-800 dark:text-white mb-2 tracking-tight break-words leading-tight">Word</h1>
+                        <p id="pronunciationFeedback" class="absolute -top-8 left-1/2 transform -translate-x-1/2 text-sm font-bold opacity-0 transition-opacity duration-300 pointer-events-none whitespace-nowrap bg-white/90 dark:bg-gray-800/90 px-3 py-1 rounded-full shadow-md"></p>
                         <p id="cardIpa" class="text-xl text-gray-400 font-mono">/ipa/</p>
-                        <span id="cardPos" class="inline-block mt-3 text-sm text-blue-600 dark:text-blue-400 font-semibold bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full">pos</span>
+                        <span id="cardPos" class="inline-block mt-3 text-sm font-semibold px-3 py-1 rounded-full">pos</span>
                     </div>
 
-                    <div class="text-center text-gray-400 text-sm animate-pulse">
+                    <div class="text-center text-gray-300 text-xs animate-pulse font-bold tracking-widest uppercase">
                         Tap to flip <i class="fa-solid fa-arrow-rotate-right ml-1"></i>
                     </div>
                 </div>
 
                 <!-- BACK -->
-                <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 flex flex-col justify-between p-8 rounded-3xl bg-slate-50 dark:bg-gray-750 dark:bg-slate-800 border border-slate-200 dark:border-gray-700">
+                <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 flex flex-col justify-between p-8 rounded-3xl bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700">
                     <div>
                         <div class="flex items-center gap-2 mb-4">
                             <span class="w-2 h-8 bg-blue-500 rounded-full"></span>
@@ -116,14 +162,14 @@
                         <p id="cardThai" class="text-3xl text-gray-800 dark:text-white font-thai mb-6 leading-relaxed">คำแปล</p>
                         
                         <div class="bg-white dark:bg-gray-700 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-600">
-                            <p class="text-xs text-gray-400 uppercase font-bold mb-2 tracking-wider">Example</p>
-                            <p id="cardExample" class="text-lg text-gray-700 dark:text-gray-200 italic mb-2">"..."</p>
+                            <p class="text-[10px] text-gray-400 uppercase font-black mb-2 tracking-widest">Example</p>
+                            <p id="cardExample" class="text-lg text-gray-700 dark:text-gray-200 italic mb-2 leading-snug">"..."</p>
                             <p id="cardExampleMeaning" class="text-sm text-gray-500 dark:text-gray-400 font-thai">"..."</p>
                         </div>
                     </div>
 
                     <div class="flex justify-center mt-4">
-                         <button id="speakBtnBack" class="flex items-center gap-2 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 px-4 py-2 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors shadow-sm">
+                         <button id="speakBtnBack" class="flex items-center gap-2 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 px-5 py-2.5 rounded-full hover:bg-blue-200 transition-colors shadow-sm font-bold text-sm">
                             <i class="fa-solid fa-volume-high"></i> Listen again
                         </button>
                     </div>
@@ -133,56 +179,66 @@
     </main>
 
     <!-- FOOTER CONTROLS -->
-    <footer class="p-6 pb-8 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 max-w-md mx-auto w-full z-10 transition-colors duration-300">
-        <div class="flex justify-between items-center gap-4">
-            <button id="prevBtn" class="w-14 h-14 rounded-full border-2 border-gray-200 dark:border-gray-600 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center transition-all active:scale-90">
-                <i class="fa-solid fa-arrow-left text-lg"></i>
+    <footer class="p-4 pb-8 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 max-w-md mx-auto w-full z-10 transition-colors duration-300">
+        <div class="flex justify-between items-center gap-3">
+            <button id="prevBtn" class="w-12 h-12 rounded-full border-2 border-gray-100 dark:border-gray-700 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center transition-all active:scale-90">
+                <i class="fa-solid fa-arrow-left"></i>
             </button>
             
-            <!-- Main Action Button (Quiz Mode) -->
-            <button id="quizModeBtn" class="flex-1 h-14 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-lg shadow-blue-200 dark:shadow-none flex items-center justify-center gap-2 font-bold hover:from-blue-700 hover:to-indigo-700 transition-all active:scale-95">
-                <i class="fa-solid fa-graduation-cap"></i> Quiz Mode
+            <button id="shuffleBtn" class="w-12 h-12 rounded-full border-2 border-gray-100 dark:border-gray-700 text-gray-400 hover:text-orange-500 flex items-center justify-center transition-all active:scale-90" title="Shuffle Cards">
+                <i class="fa-solid fa-shuffle"></i>
+            </button>
+
+            <button id="quizModeBtn" class="flex-1 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-lg flex items-center justify-center gap-2 font-bold hover:opacity-90 transition-all active:scale-95">
+                <i class="fa-solid fa-graduation-cap"></i> Quiz
             </button>
             
-            <button id="nextBtn" class="w-14 h-14 rounded-full border-2 border-gray-200 dark:border-gray-600 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center transition-all active:scale-90">
-                <i class="fa-solid fa-arrow-right text-lg"></i>
+            <button id="nextBtn" class="w-12 h-12 rounded-full border-2 border-gray-100 dark:border-gray-700 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center transition-all active:scale-90">
+                <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
     </footer>
+    </div> <!-- end view-flashcards -->
 
-    <!-- MODALS (Hidden by default) -->
-
-    <!-- 1. Settings Modal -->
-    <div id="settingsModal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-end sm:items-center justify-center opacity-0 transition-opacity duration-300">
-        <div class="bg-white dark:bg-gray-800 w-full max-w-sm rounded-t-2xl sm:rounded-2xl p-6 transform translate-y-full sm:translate-y-0 transition-transform duration-300">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold dark:text-white">Settings</h2>
-                <button id="closeSettings" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-2xl"></i></button>
+    <!-- 2. SETTINGS VIEW -->
+    <div id="view-settings" class="flex-1 flex flex-col p-6 hidden max-w-md mx-auto w-full pt-12">
+        <h2 class="text-3xl font-bold dark:text-white mb-8 text-center">Settings</h2>
+        <div class="space-y-4">
+            <div class="flex justify-between items-center cursor-pointer p-5 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl transition-colors shadow-sm border border-gray-100 dark:border-gray-700">
+                <span class="dark:text-gray-200 font-semibold flex items-center"><i class="fa-solid fa-moon text-xl mr-4 text-blue-500"></i> Dark Mode</span>
+                <button id="toggleDark" class="w-14 h-7 bg-gray-200 dark:bg-blue-600 rounded-full relative transition-colors">
+                    <span class="absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform dark:translate-x-7 shadow-sm"></span>
+                </button>
             </div>
-            
-            <div class="space-y-4">
-                <!-- Dark Mode Toggle -->
-                <div class="flex justify-between items-center">
-                    <span class="dark:text-gray-200"><i class="fa-solid fa-moon mr-2"></i> Dark Mode</span>
-                    <button id="toggleDark" class="w-12 h-6 bg-gray-200 dark:bg-blue-600 rounded-full relative transition-colors">
-                        <span class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform dark:translate-x-6"></span>
-                    </button>
-                </div>
-                <!-- Auto Audio Toggle -->
-                <div class="flex justify-between items-center">
-                    <span class="dark:text-gray-200"><i class="fa-solid fa-volume-high mr-2"></i> Auto-play Audio</span>
-                    <button id="toggleAudio" class="w-12 h-6 bg-gray-200 rounded-full relative transition-colors">
-                        <span class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform"></span>
-                    </button>
-                </div>
-                 <!-- Reset Progress -->
-                 <hr class="border-gray-100 dark:border-gray-700">
-                 <button id="resetProgressBtn" class="w-full py-3 text-red-500 font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors">
-                    <i class="fa-solid fa-trash-can mr-2"></i> Reset Learned Words
-                 </button>
+            <div class="flex justify-between items-center cursor-pointer p-5 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl transition-colors shadow-sm border border-gray-100 dark:border-gray-700">
+                <span class="dark:text-gray-200 font-semibold flex items-center"><i class="fa-solid fa-volume-high text-xl mr-4 text-green-500"></i> Auto-play Audio</span>
+                <button id="toggleAudio" class="w-14 h-7 bg-gray-200 rounded-full relative transition-colors">
+                    <span class="absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform shadow-sm"></span>
+                </button>
             </div>
+            <button id="resetProgressBtn" class="w-full py-5 mt-8 text-red-500 font-bold bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-2xl transition-colors shadow-sm border border-gray-100 dark:border-gray-700">
+                <i class="fa-solid fa-trash-can mr-2"></i> Reset Learned Words
+            </button>
         </div>
     </div>
+
+    <!-- BOTTOM NAVIGATION -->
+    <nav class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 pb-safe z-30">
+        <div class="flex justify-around items-center h-16 max-w-md mx-auto">
+            <button onclick="switchTab('home')" id="tab-home" class="flex-1 flex flex-col items-center justify-center gap-1 text-blue-600 dark:text-blue-400 transition-colors">
+                <i class="fa-solid fa-house text-xl mb-0.5"></i>
+                <span class="text-[10px] font-bold">Home</span>
+            </button>
+            <button onclick="switchTab('flashcards')" id="tab-flashcards" class="flex-1 flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                <i class="fa-solid fa-layer-group text-xl mb-0.5"></i>
+                <span class="text-[10px] font-bold">Practice</span>
+            </button>
+            <button onclick="switchTab('settings')" id="tab-settings" class="flex-1 flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                <i class="fa-solid fa-gear text-xl mb-0.5"></i>
+                <span class="text-[10px] font-bold">Settings</span>
+            </button>
+        </div>
+    </nav>
 
     <!-- 2. Quiz Modal -->
     <div id="quizModal" class="fixed inset-0 bg-white dark:bg-gray-900 hidden z-50 flex flex-col">
@@ -194,13 +250,18 @@
         
         <div class="flex-1 flex flex-col justify-center items-center p-6 max-w-md mx-auto w-full">
             <div class="mb-8 text-center">
-                <span class="text-sm text-gray-400 uppercase tracking-wide">What is the meaning of?</span>
+                <span class="text-[10px] text-gray-400 uppercase font-black tracking-widest">Meaning of?</span>
                 <h2 id="quizWord" class="text-4xl font-bold text-gray-800 dark:text-white mt-2 mb-4">Word</h2>
                 <button id="quizSpeakBtn" class="text-blue-500 hover:text-blue-600"><i class="fa-solid fa-volume-high text-2xl"></i></button>
             </div>
             
             <div id="quizOptions" class="grid grid-cols-1 gap-3 w-full">
                 <!-- Options injected by JS -->
+            </div>
+            
+            <div id="quizInputContainer" class="hidden w-full flex flex-col gap-3">
+                <input type="text" id="quizInput" class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-800 dark:text-white border-2 border-transparent focus:border-blue-500 rounded-xl outline-none text-center text-xl font-bold" placeholder="Type the English word..." autocomplete="off" autocorrect="off" autocapitalize="none">
+                <button id="quizSubmitBtn" class="w-full bg-blue-600 text-white py-3 rounded-xl shadow font-bold hover:bg-blue-700 transition-colors">Submit</button>
             </div>
             
             <div id="quizFeedback" class="mt-6 h-8 text-center font-bold"></div>
@@ -213,7 +274,8 @@
         </div>
     </div>
 
-    <script type="module" src="./app.js"></script>
+    <script src="./data.js"></script>
+    <script src="./app.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
