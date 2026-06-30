@@ -37,21 +37,13 @@
 
     <!-- 0. HOME VIEW -->
     <div id="view-home" class="flex-1 flex flex-col items-center justify-center p-6 text-center">
-        <i class="fa-solid fa-house text-6xl text-blue-500 mb-6 drop-shadow-lg"></i>
-        <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">my fee</h1>
-        <p class="text-gray-500 dark:text-gray-400 mb-8">Welcome to your personal dashboard.</p>
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm w-full max-w-sm">
-            <h3 class="font-bold text-gray-700 dark:text-gray-200 mb-2">Today's Progress</h3>
-            <div class="flex justify-between items-center text-sm mb-2">
-                <span class="text-gray-500 dark:text-gray-400">Words Practiced</span>
-                <span id="homeCardsFlipped" class="font-bold text-blue-600">0</span>
-            </div>
-            <div class="flex justify-between items-center text-sm">
-                <span class="text-gray-500 dark:text-gray-400">Current Streak</span>
-                <span class="font-bold text-orange-500"><i class="fa-solid fa-fire"></i> <span id="homeStreak">0</span> days</span>
-            </div>
-            <button onclick="switchTab('flashcards')" class="mt-6 w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition-colors">Continue Practice</button>
-        </div>
+        <h1 class="text-5xl font-extrabold text-gray-800 dark:text-white mb-12 tracking-tight">my fee</h1>
+        
+        <button onclick="switchTab('flashcards')" class="group relative flex flex-col items-center justify-center w-48 h-48 bg-white dark:bg-gray-800 rounded-full shadow-xl border border-gray-100 dark:border-gray-700 hover:shadow-2xl hover:scale-105 transition-all duration-300">
+            <div class="absolute inset-0 bg-blue-600 rounded-full opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
+            <i class="fa-solid fa-graduation-cap text-6xl text-blue-500 mb-4 group-hover:text-blue-600 transition-colors"></i>
+            <span class="text-xl font-bold text-gray-700 dark:text-gray-200">Start Learning</span>
+        </button>
     </div>
 
     <!-- 1. FLASHCARDS VIEW -->
