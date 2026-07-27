@@ -31,22 +31,6 @@ function updateDashboard() {
         todoProgressEl.style.width = `${pct}%`;
     }
 
-    // 3. Water Summary
-    const waterMlEl = document.getElementById('dashWaterMl');
-    const waterGoalEl = document.getElementById('dashWaterGoal');
-    const waterProgressEl = document.getElementById('dashWaterProgress');
-
-    if (state.water) {
-        const currentWater = state.water.current || 0;
-        const goalWater = state.water.goal || 2000;
-        if (waterMlEl) waterMlEl.textContent = currentWater.toLocaleString();
-        if (waterGoalEl) waterGoalEl.textContent = goalWater.toLocaleString();
-        if (waterProgressEl) {
-            const pct = Math.min(100, Math.round((currentWater / goalWater) * 100));
-            waterProgressEl.style.width = `${pct}%`;
-        }
-    }
-
     // 4. Finance Summary
     const dashExpenseEl = document.getElementById('dashExpenseTotal');
     if (dashExpenseEl && state.finance) {

@@ -24,8 +24,6 @@ let state = {
     todos: JSON.parse(localStorage.getItem('todoData')) || [],
     // Finance State
     finance: JSON.parse(localStorage.getItem('financeData')) || [],
-    // Water State
-    water: JSON.parse(localStorage.getItem('waterData')) || { goal: 2000, current: 0, lastDate: new Date().toLocaleDateString() },
     // Habit State
     habits: JSON.parse(localStorage.getItem('habitData')) || [
         { id: 1, name: 'อ่านหนังสือ 15 นาที', icon: 'fa-book', streak: 0, lastCompleted: null },

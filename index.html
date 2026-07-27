@@ -94,21 +94,6 @@
                         </div>
                     </div>
 
-                    <!-- Water Widget -->
-                    <div onclick="switchTab('water')" class="cursor-pointer bg-gradient-to-br from-cyan-500 to-blue-600 text-white p-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
-                        <div class="flex justify-between items-start">
-                            <span class="text-xs font-bold opacity-80 font-thai">ดื่มน้ำ</span>
-                            <i class="fa-solid fa-droplet text-xl opacity-90"></i>
-                        </div>
-                        <div class="mt-3">
-                            <span id="dashWaterMl" class="text-2xl font-black">0</span>
-                            <span class="text-xs opacity-75">/ <span id="dashWaterGoal">2000</span> ml</span>
-                        </div>
-                        <div class="w-full h-1.5 bg-white/20 rounded-full mt-2 overflow-hidden">
-                            <div id="dashWaterProgress" class="h-full bg-white transition-all duration-500" style="width: 0%"></div>
-                        </div>
-                    </div>
-
                     <!-- Expense Widget -->
                     <div onclick="switchTab('finance')" class="cursor-pointer bg-gradient-to-br from-rose-500 to-pink-600 text-white p-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
                         <div class="flex justify-between items-start">
@@ -169,16 +154,6 @@
                         <div>
                             <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">กระเป๋าเงิน</div>
                             <div class="text-[11px] text-gray-400 font-thai">รายรับ-รายจ่าย</div>
-                        </div>
-                    </button>
-
-                    <button onclick="switchTab('water')" class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:scale-[1.02] transition-transform text-left">
-                        <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 dark:bg-cyan-900/40 dark:text-cyan-400 flex items-center justify-center shrink-0">
-                            <i class="fa-solid fa-glass-water"></i>
-                        </div>
-                        <div>
-                            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">ดื่มน้ำ</div>
-                            <div class="text-[11px] text-gray-400 font-thai">Water Tracker</div>
                         </div>
                     </button>
 
@@ -510,65 +485,7 @@
         </main>
     </div>
 
-    <!-- ============================================== -->
-    <!-- 4. WATER INTAKE TRACKER VIEW                   -->
-    <!-- ============================================== -->
-    <div id="view-water" class="flex-1 flex flex-col hidden w-full h-full pb-20">
-        <header class="bg-white dark:bg-gray-800 shadow-sm p-4 z-20">
-            <div class="max-w-md mx-auto flex justify-between items-center">
-                <button onclick="switchTab('home')" class="text-gray-400 hover:text-cyan-500 transition-colors p-2">
-                    <i class="fa-solid fa-arrow-left text-2xl"></i>
-                </button>
-                <h2 class="text-xl font-bold dark:text-white font-thai">ติดตามการดื่มน้ำ (Water Tracker)</h2>
-                <div class="w-10"></div>
-            </div>
-        </header>
 
-        <main class="flex-1 overflow-y-auto p-4 max-w-md mx-auto w-full flex flex-col items-center justify-between space-y-6">
-            <!-- Liquid Gauge Circle / Bottle -->
-            <div class="relative w-56 h-56 rounded-full bg-cyan-50 dark:bg-gray-800 border-4 border-cyan-200 dark:border-cyan-800 flex flex-col items-center justify-center shadow-xl overflow-hidden mt-4">
-                <!-- Wave Bar Animation -->
-                <div id="waterWaveBar" class="absolute bottom-0 w-full bg-gradient-to-t from-cyan-600 to-blue-400 transition-all duration-700 ease-out" style="height: 0%"></div>
-                
-                <div class="relative z-10 text-center">
-                    <i class="fa-solid fa-droplet text-3xl text-cyan-400 mb-1 animate-bounce"></i>
-                    <h1 id="waterPercent" class="text-4xl font-black text-gray-800 dark:text-white">0%</h1>
-                    <p class="text-sm font-bold text-gray-600 dark:text-gray-300 mt-1 font-thai">
-                        <span id="waterCurrent">0</span> / <span id="waterGoal">2000</span> ml
-                    </p>
-                </div>
-            </div>
-
-            <!-- Quick Add Water Buttons -->
-            <div class="w-full space-y-3">
-                <h3 class="text-center font-bold text-xs uppercase text-gray-400 tracking-wider font-thai">กดเติมน้ำตามปริมาณ</h3>
-                <div class="grid grid-cols-3 gap-3">
-                    <button onclick="addWater(200)" class="flex flex-col items-center justify-center p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-cyan-100 dark:border-gray-700 hover:border-cyan-400 active:scale-95 transition-all">
-                        <i class="fa-solid fa-glass-water text-2xl text-cyan-500 mb-1"></i>
-                        <span class="font-bold text-sm text-gray-800 dark:text-gray-200">+200 ml</span>
-                        <span class="text-[10px] text-gray-400 font-thai">แก้วเล็ก</span>
-                    </button>
-
-                    <button onclick="addWater(350)" class="flex flex-col items-center justify-center p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-cyan-100 dark:border-gray-700 hover:border-cyan-400 active:scale-95 transition-all">
-                        <i class="fa-solid fa-bottle-water text-2xl text-blue-500 mb-1"></i>
-                        <span class="font-bold text-sm text-gray-800 dark:text-gray-200">+350 ml</span>
-                        <span class="text-[10px] text-gray-400 font-thai">ขวดเล็ก</span>
-                    </button>
-
-                    <button onclick="addWater(500)" class="flex flex-col items-center justify-center p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-cyan-100 dark:border-gray-700 hover:border-cyan-400 active:scale-95 transition-all">
-                        <i class="fa-solid fa-whiskey-glass text-2xl text-indigo-500 mb-1"></i>
-                        <span class="font-bold text-sm text-gray-800 dark:text-gray-200">+500 ml</span>
-                        <span class="text-[10px] text-gray-400 font-thai">ขวดใหญ่</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Reset Water Button -->
-            <button onclick="resetWater()" class="text-xs font-bold text-gray-400 hover:text-red-500 transition-colors font-thai py-2">
-                <i class="fa-solid fa-rotate-left mr-1"></i> รีเซ็ตการดื่มน้ำของวันนี้
-            </button>
-        </main>
-    </div>
 
     <!-- ============================================== -->
     <!-- 5. HABIT TRACKER VIEW                          -->
@@ -725,10 +642,6 @@
                 <i class="fa-solid fa-wallet text-lg"></i>
                 <span class="text-[10px] font-bold font-thai mt-0.5">เงิน</span>
             </button>
-            <button id="tab-water" onclick="switchTab('water')" class="flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
-                <i class="fa-solid fa-droplet text-lg"></i>
-                <span class="text-[10px] font-bold font-thai mt-0.5">น้ำ</span>
-            </button>
             <button id="tab-habit" onclick="switchTab('habit')" class="flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
                 <i class="fa-solid fa-bolt text-lg"></i>
                 <span class="text-[10px] font-bold font-thai mt-0.5">นิสัย</span>
@@ -745,7 +658,6 @@
     <script src="./js/core/navigation.js"></script>
     <script src="./js/core/settings.js"></script>
     <script src="./js/features/finance.js"></script>
-    <script src="./js/features/water.js"></script>
     <script src="./js/features/habit.js"></script>
     <script src="./js/features/dashboard.js"></script>
     <script src="./js/todo/todo.js"></script>
