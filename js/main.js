@@ -17,6 +17,19 @@ function init() {
     setupEventListeners();
     filterCards();
 
+    // Render features
+    if (typeof renderFinance === 'function') renderFinance();
+    if (typeof renderWater === 'function') renderWater();
+    if (typeof renderHabits === 'function') renderHabits();
+    if (typeof renderDatabaseStats === 'function') renderDatabaseStats();
+    if (typeof updateDashboard === 'function') updateDashboard();
+
+    const dateEl = document.getElementById('dashTodayDate');
+    if (dateEl) {
+        const todayStr = new Date().toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        dateEl.textContent = todayStr;
+    }
+
     switchTab('home');
 
     if (state.allData.length === 0) {
@@ -75,7 +88,7 @@ function setupEventListeners() {
     if (els.todoForm) {
         els.todoForm.onsubmit = (e) => {
             e.preventDefault();
-            addTodo();
+            if (typeof addTodoFromForm === 'function') addTodoFromForm();
         };
     }
 

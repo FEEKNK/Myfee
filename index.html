@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>my fee</title>
+    <title>MY FEE</title>
     
     <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192x192.png">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
     <meta name="theme-color" content="#2563eb">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -30,234 +31,648 @@
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="h-screen flex flex-col overflow-hidden bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 select-none font-sans transition-colors duration-300">
+<body class="h-screen flex flex-col overflow-hidden bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 select-none font-sans transition-colors duration-300">
 
-    <!-- 0. HOME VIEW -->
-    <div id="view-home" class="flex-1 flex flex-col items-center justify-center p-6 text-center">
-        <h1 class="text-5xl font-extrabold text-gray-800 dark:text-white mb-12 tracking-tight">my fee</h1>
-        
-        <div class="flex gap-6">
-            <button onclick="switchTab('flashcards')" class="group relative flex flex-col items-center justify-center w-40 h-40 bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                <div class="absolute inset-0 bg-blue-600 rounded-3xl opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
-                <i class="fa-solid fa-graduation-cap text-5xl text-blue-500 mb-3 group-hover:text-blue-600 transition-colors"></i>
-                <span class="text-lg font-bold text-gray-700 dark:text-gray-200">Start Learning</span>
-            </button>
-            <button onclick="switchTab('todo')" class="group relative flex flex-col items-center justify-center w-40 h-40 bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                <div class="absolute inset-0 bg-green-600 rounded-3xl opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
-                <i class="fa-solid fa-list-check text-5xl text-green-500 mb-3 group-hover:text-green-600 transition-colors"></i>
-                <span class="text-lg font-bold text-gray-700 dark:text-gray-200 font-thai">สิ่งที่ต้องทำ</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- 1. FLASHCARDS VIEW -->
-    <div id="view-flashcards" class="flex-1 flex flex-col hidden h-full w-full overflow-hidden">
-    <!-- HEADER -->
-    <header class="bg-white dark:bg-gray-800 shadow-sm p-4 z-20 sticky top-0 transition-colors duration-300">
-        <div class="max-w-md mx-auto flex flex-col gap-3">
-            <div class="flex items-center gap-2">
-                <button onclick="switchTab('home')" class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Back to Home">
-                    <i class="fa-solid fa-arrow-left text-xl"></i>
-                </button>
-                
-                <div class="flex-1 relative">
-                    <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" id="searchInput" placeholder="Search..." autocomplete="off"
-                        class="w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-full focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all placeholder-gray-400 text-sm">
-                </div>
-
-                <div class="flex items-center text-orange-500 font-bold px-1" title="Daily Streak">
-                    <i class="fa-solid fa-fire mr-1"></i> <span id="streakCount">0</span>
-                </div>
-
-                <button onclick="switchTab('settings')" class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Settings">
-                    <i class="fa-solid fa-gear text-xl"></i>
-                </button>
-            </div>
-
-            <!-- Counters & Progress -->
-             <div class="flex flex-col gap-2 px-1">
-                <div class="flex justify-between items-center text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500 font-bold">
-                    <span>Card: <span id="currentIndex" class="text-blue-600 dark:text-blue-400">0</span> / <span id="totalCards">0</span></span>
-                    <span>Learned: <span id="learnedCount" class="text-green-600">0</span> (<span id="progressPercent">0</span>%)</span>
-                </div>
-                <div class="w-full h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
-                    <div id="progressBar" class="h-full bg-green-500 transition-all duration-500" style="width: 0%"></div>
-                </div>
-            </div>
-
-            <!-- Filter Bar (Levels) -->
-            <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar" id="levelFilterBar">
-                <button data-level="All" class="lvl-btn active">All Levels</button>
-                <button data-level="A1" class="lvl-btn">A1</button>
-                <button data-level="A2" class="lvl-btn">A2</button>
-                <button data-level="B1" class="lvl-btn">B1</button>
-                <button data-level="B2" class="lvl-btn">B2</button>
-                <button data-level="Fav" class="lvl-btn text-yellow-600 dark:text-yellow-400"><i class="fa-solid fa-star mr-1"></i> Stars</button>
-            </div>
-
-            <!-- Category Bar -->
-            <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar" id="categoryList">
-                <!-- JS populates buttons -->
-            </div>
-        </div>
-    </header>
-
-    <!-- MAIN AREA -->
-    <main class="flex-1 flex flex-col justify-center items-center p-4 relative w-full max-w-md mx-auto touch-manipulation">
-        
-        <!-- Messages -->
-        <div id="msgContainer" class="hidden absolute flex-col items-center justify-center text-center z-0">
-            <i id="msgIcon" class="fa-solid fa-check-circle text-5xl text-green-500 mb-3"></i>
-            <p id="msgText" class="text-gray-500 dark:text-gray-400 text-lg font-thai">All words learned!</p>
-            <button id="resetLearnedBtn" class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-full text-sm shadow-lg hover:bg-blue-700 transition-all">
-                Reset Progress
-            </button>
-        </div>
-
-        <!-- CARD CONTAINER -->
-        <div class="w-full aspect-[4/5] max-h-[60vh] perspective-1000 cursor-pointer group z-10" id="cardContainer">
-            <div class="flashcard-inner bg-white dark:bg-gray-800 relative w-full h-full shadow-xl rounded-3xl transition-all duration-500 transform-style-3d" id="cardInner">
-                
-                <!-- FRONT -->
-                <div class="absolute inset-0 w-full h-full backface-hidden flex flex-col justify-between p-8 rounded-3xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
-                    <div class="flex justify-between items-start">
-                        <span id="cardLevel" class="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-xs px-2 py-1 rounded-full font-bold uppercase">--</span>
-                        <div class="flex gap-1">
-                            <button id="starBtn" class="text-gray-300 hover:text-yellow-500 transition-colors p-2" title="Add to Favorites">
-                                <i class="fa-solid fa-star text-2xl"></i>
-                            </button>
-                            <button id="markLearnedBtn" class="text-gray-300 hover:text-green-500 transition-colors p-2" title="Mark as Learned">
-                                <i class="fa-regular fa-circle-check text-2xl"></i>
-                            </button>
-                            <button id="speakBtnFront" class="text-gray-400 hover:text-blue-500 transition-colors p-2 active:scale-95">
-                                <i class="fa-solid fa-volume-high text-2xl"></i>
-                            </button>
-                            <button id="micBtnFront" class="text-gray-400 hover:text-red-500 transition-colors p-2 active:scale-95" title="Practice Pronunciation">
-                                <i class="fa-solid fa-microphone text-2xl"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="text-center mt-4 relative">
-                        <h1 id="cardWord" class="text-5xl font-bold text-gray-800 dark:text-white mb-2 tracking-tight break-words leading-tight">Word</h1>
-                        <p id="pronunciationFeedback" class="absolute -top-8 left-1/2 transform -translate-x-1/2 text-sm font-bold opacity-0 transition-opacity duration-300 pointer-events-none whitespace-nowrap bg-white/90 dark:bg-gray-800/90 px-3 py-1 rounded-full shadow-md"></p>
-                        <p id="cardIpa" class="text-xl text-gray-400 font-mono">/ipa/</p>
-                        <span id="cardPos" class="inline-block mt-3 text-sm font-semibold px-3 py-1 rounded-full">pos</span>
-                    </div>
-
-                    <div class="text-center text-gray-300 text-xs animate-pulse font-bold tracking-widest uppercase">
-                        Tap to flip <i class="fa-solid fa-arrow-rotate-right ml-1"></i>
-                    </div>
-                </div>
-
-                <!-- BACK -->
-                <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 flex flex-col justify-between p-8 rounded-3xl bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700">
-                    <div>
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="w-2 h-8 bg-blue-500 rounded-full"></span>
-                            <h2 class="text-xl font-bold text-gray-700 dark:text-gray-200 font-thai">ความหมาย</h2>
-                        </div>
-                        
-                        <p id="cardThai" class="text-3xl text-gray-800 dark:text-white font-thai mb-6 leading-relaxed">คำแปล</p>
-                        
-                        <div class="bg-white dark:bg-gray-700 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-600">
-                            <p class="text-[10px] text-gray-400 uppercase font-black mb-2 tracking-widest">Example</p>
-                            <p id="cardExample" class="text-lg text-gray-700 dark:text-gray-200 italic mb-2 leading-snug">"..."</p>
-                            <p id="cardExampleMeaning" class="text-sm text-gray-500 dark:text-gray-400 font-thai">"..."</p>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-center mt-4">
-                         <button id="speakBtnBack" class="flex items-center gap-2 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 px-5 py-2.5 rounded-full hover:bg-blue-200 transition-colors shadow-sm font-bold text-sm">
-                            <i class="fa-solid fa-volume-high"></i> Listen again
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- FOOTER CONTROLS -->
-    <footer class="p-4 pb-8 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 max-w-md mx-auto w-full z-10 transition-colors duration-300">
-        <div class="flex justify-between items-center gap-3">
-            <button id="prevBtn" class="w-12 h-12 rounded-full border-2 border-gray-100 dark:border-gray-700 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center transition-all active:scale-90">
-                <i class="fa-solid fa-arrow-left"></i>
-            </button>
-            
-            <button id="shuffleBtn" class="w-12 h-12 rounded-full border-2 border-gray-100 dark:border-gray-700 text-gray-400 hover:text-orange-500 flex items-center justify-center transition-all active:scale-90" title="Shuffle Cards">
-                <i class="fa-solid fa-shuffle"></i>
-            </button>
-
-            <button id="quizModeBtn" class="flex-1 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-lg flex items-center justify-center gap-2 font-bold hover:opacity-90 transition-all active:scale-95">
-                <i class="fa-solid fa-graduation-cap"></i> Quiz
-            </button>
-            
-            <button id="nextBtn" class="w-12 h-12 rounded-full border-2 border-gray-100 dark:border-gray-700 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center transition-all active:scale-90">
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
-        </div>
-    </footer>
-    </div> <!-- end view-flashcards -->
-
-    <!-- 2. SETTINGS VIEW -->
-    <div id="view-settings" class="flex-1 flex flex-col p-6 hidden max-w-md mx-auto w-full pt-12">
-        <div class="flex justify-between items-center mb-8">
-            <button onclick="switchTab('flashcards')" class="text-gray-400 hover:text-blue-500 transition-colors p-2">
-                <i class="fa-solid fa-arrow-left text-2xl"></i>
-            </button>
-            <h2 class="text-3xl font-bold dark:text-white text-center">Settings</h2>
-            <div class="w-10"></div> <!-- Spacer for centering -->
-        </div>
-        <div class="space-y-4">
-            <div class="flex justify-between items-center cursor-pointer p-5 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl transition-colors shadow-sm border border-gray-100 dark:border-gray-700">
-                <span class="dark:text-gray-200 font-semibold flex items-center"><i class="fa-solid fa-moon text-xl mr-4 text-blue-500"></i> Dark Mode</span>
-                <button id="toggleDark" class="w-14 h-7 bg-gray-200 dark:bg-blue-600 rounded-full relative transition-colors">
-                    <span class="absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform dark:translate-x-7 shadow-sm"></span>
-                </button>
-            </div>
-            <div class="flex justify-between items-center cursor-pointer p-5 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl transition-colors shadow-sm border border-gray-100 dark:border-gray-700">
-                <span class="dark:text-gray-200 font-semibold flex items-center"><i class="fa-solid fa-volume-high text-xl mr-4 text-green-500"></i> Auto-play Audio</span>
-                <button id="toggleAudio" class="w-14 h-7 bg-gray-200 rounded-full relative transition-colors">
-                    <span class="absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform shadow-sm"></span>
-                </button>
-            </div>
-            <button id="resetProgressBtn" class="w-full py-5 mt-8 text-red-500 font-bold bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-2xl transition-colors shadow-sm border border-gray-100 dark:border-gray-700">
-                <i class="fa-solid fa-trash-can mr-2"></i> Reset Learned Words
-            </button>
-        </div>
-    </div>
-
-    <!-- 3. TO-DO VIEW -->
-    <div id="view-todo" class="flex-1 flex flex-col p-0 hidden w-full h-full">
-        <header class="bg-white dark:bg-gray-800 shadow-sm p-4 z-20 transition-colors duration-300">
+    <!-- ============================================== -->
+    <!-- 0. LIFE DASHBOARD & HOME VIEW                  -->
+    <!-- ============================================== -->
+    <div id="view-home" class="flex-1 flex flex-col overflow-y-auto pb-24">
+        <!-- Dashboard Header -->
+        <header class="bg-white dark:bg-gray-800 p-6 shadow-sm border-b border-gray-100 dark:border-gray-700">
             <div class="max-w-md mx-auto flex justify-between items-center">
-                <button onclick="switchTab('home')" class="text-gray-400 hover:text-green-500 transition-colors p-2">
-                    <i class="fa-solid fa-arrow-left text-2xl"></i>
-                </button>
-                <h2 class="text-2xl font-bold dark:text-white font-thai">สิ่งที่ต้องทำวันนี้</h2>
-                <div class="w-10"></div>
+                <div class="flex items-center gap-3">
+                    <img src="logo.png" alt="MY FEE Logo" class="w-12 h-12 rounded-full object-cover shadow-md border-2 border-blue-500/80 p-0.5 bg-white dark:bg-gray-700">
+                    <div>
+                        <h1 class="text-3xl font-black text-gray-800 dark:text-white tracking-tight flex items-center gap-1.5 uppercase">MY FEE <span class="text-blue-500 text-2xl">•</span></h1>
+                        <p class="text-xs text-gray-400 font-thai mt-0.5" id="dashTodayDate">วันนี้น่าเรียนรู้และสร้างสรรค์</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 bg-orange-50 dark:bg-orange-950/40 border border-orange-100 dark:border-orange-900/50 px-3 py-1.5 rounded-full">
+                    <i class="fa-solid fa-fire text-orange-500 text-lg"></i>
+                    <span id="dashStreak" class="font-bold text-orange-600 dark:text-orange-400 text-sm">0</span>
+                    <span class="text-xs text-orange-400 font-thai font-semibold">วัน</span>
+                </div>
             </div>
         </header>
+
+        <main class="max-w-md mx-auto w-full p-4 space-y-5">
+            <!-- Summary Overview Section -->
+            <div class="space-y-3">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 font-thai">สรุปภาพรวมวันนี้ (Daily Overview)</h2>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- Flashcard Widget -->
+                    <div onclick="switchTab('flashcards')" class="cursor-pointer bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs font-bold opacity-80 font-thai">Flashcards</span>
+                            <i class="fa-solid fa-graduation-cap text-xl opacity-90"></i>
+                        </div>
+                        <div class="mt-3">
+                            <span id="dashLearned" class="text-2xl font-black">0</span>
+                            <span class="text-xs opacity-75">/ <span id="dashTotalCards">0</span> คำ</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-white/20 rounded-full mt-2 overflow-hidden">
+                            <div id="dashFlashProgress" class="h-full bg-white transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- To-Do Widget -->
+                    <div onclick="switchTab('todo')" class="cursor-pointer bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs font-bold opacity-80 font-thai">To-Do Today</span>
+                            <i class="fa-solid fa-list-check text-xl opacity-90"></i>
+                        </div>
+                        <div class="mt-3">
+                            <span id="dashTodoDone" class="text-2xl font-black">0</span>
+                            <span class="text-xs opacity-75">/ <span id="dashTodoTotal">0</span> งาน</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-white/20 rounded-full mt-2 overflow-hidden">
+                            <div id="dashTodoProgress" class="h-full bg-white transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Water Widget -->
+                    <div onclick="switchTab('water')" class="cursor-pointer bg-gradient-to-br from-cyan-500 to-blue-600 text-white p-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs font-bold opacity-80 font-thai">ดื่มน้ำ</span>
+                            <i class="fa-solid fa-droplet text-xl opacity-90"></i>
+                        </div>
+                        <div class="mt-3">
+                            <span id="dashWaterMl" class="text-2xl font-black">0</span>
+                            <span class="text-xs opacity-75">/ <span id="dashWaterGoal">2000</span> ml</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-white/20 rounded-full mt-2 overflow-hidden">
+                            <div id="dashWaterProgress" class="h-full bg-white transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Expense Widget -->
+                    <div onclick="switchTab('finance')" class="cursor-pointer bg-gradient-to-br from-rose-500 to-pink-600 text-white p-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs font-bold opacity-80 font-thai">จ่ายวันนี้</span>
+                            <i class="fa-solid fa-wallet text-xl opacity-90"></i>
+                        </div>
+                        <div class="mt-3">
+                            <span id="dashExpenseTotal" class="text-2xl font-black">฿0</span>
+                        </div>
+                        <p class="text-[10px] opacity-75 mt-2 font-thai">บันทึกรายรับ-รายจ่าย</p>
+                    </div>
+                </div>
+
+                <!-- Habit Widget Card (Full width) -->
+                <div onclick="switchTab('habit')" class="cursor-pointer bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md transition-all flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                            <i class="fa-solid fa-bolt text-lg"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">Habit Tracker (นิสัยประจำวัน)</div>
+                            <div class="text-xs text-gray-400 font-thai">ทำสำเร็จวันนี้ <span id="dashHabitDone" class="font-bold text-amber-500">0</span> / <span id="dashHabitTotal">0</span> นิสัย</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-300 dark:text-gray-600 text-sm"></i>
+                </div>
+            </div>
+
+            <!-- Launcher Menus Section -->
+            <div class="space-y-3 pt-2">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 font-thai">เข้าใช้งานเมนู (Quick Launcher)</h2>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="switchTab('flashcards')" class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:scale-[1.02] transition-transform text-left">
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">Flashcards</div>
+                            <div class="text-[11px] text-gray-400 font-thai">เรียนรู้คำศัพท์</div>
+                        </div>
+                    </button>
+
+                    <button onclick="switchTab('todo')" class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:scale-[1.02] transition-transform text-left">
+                        <div class="w-10 h-10 rounded-xl bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-list-check"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">สิ่งที่ต้องทำ</div>
+                            <div class="text-[11px] text-gray-400 font-thai">To-Do Today</div>
+                        </div>
+                    </button>
+
+                    <button onclick="switchTab('finance')" class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:scale-[1.02] transition-transform text-left">
+                        <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 dark:bg-rose-900/40 dark:text-rose-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">กระเป๋าเงิน</div>
+                            <div class="text-[11px] text-gray-400 font-thai">รายรับ-รายจ่าย</div>
+                        </div>
+                    </button>
+
+                    <button onclick="switchTab('water')" class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:scale-[1.02] transition-transform text-left">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 dark:bg-cyan-900/40 dark:text-cyan-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-glass-water"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">ดื่มน้ำ</div>
+                            <div class="text-[11px] text-gray-400 font-thai">Water Tracker</div>
+                        </div>
+                    </button>
+
+                    <button onclick="switchTab('habit')" class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:scale-[1.02] transition-transform text-left">
+                        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">ติดตามนิสัย</div>
+                            <div class="text-[11px] text-gray-400 font-thai">Habit Tracker</div>
+                        </div>
+                    </button>
+
+                    <button onclick="switchTab('settings')" class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:scale-[1.02] transition-transform text-left">
+                        <div class="w-10 h-10 rounded-xl bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-gear"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">ตั้งค่า</div>
+                            <div class="text-[11px] text-gray-400 font-thai">Settings</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 1. FLASHCARDS VIEW                             -->
+    <!-- ============================================== -->
+    <div id="view-flashcards" class="flex-1 flex flex-col hidden h-full w-full overflow-hidden pb-20">
+        <header class="bg-white dark:bg-gray-800 shadow-sm p-4 z-20 sticky top-0 transition-colors duration-300">
+            <div class="max-w-md mx-auto flex flex-col gap-3">
+                <div class="flex items-center gap-2">
+                    <button onclick="switchTab('home')" class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Back to Home">
+                        <i class="fa-solid fa-arrow-left text-xl"></i>
+                    </button>
+                    
+                    <div class="flex-1 relative">
+                        <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="searchInput" placeholder="Search..." autocomplete="off"
+                            class="w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-full focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all placeholder-gray-400 text-sm">
+                    </div>
+
+                    <div class="flex items-center text-orange-500 font-bold px-1" title="Daily Streak">
+                        <i class="fa-solid fa-fire mr-1"></i> <span id="streakCount">0</span>
+                    </div>
+
+                    <button onclick="switchTab('settings')" class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Settings">
+                        <i class="fa-solid fa-gear text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="flex flex-col gap-2 px-1">
+                    <div class="flex justify-between items-center text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500 font-bold">
+                        <span>Card: <span id="currentIndex" class="text-blue-600 dark:text-blue-400">0</span> / <span id="totalCards">0</span></span>
+                        <span>Learned: <span id="learnedCount" class="text-green-600">0</span> (<span id="progressPercent">0</span>%)</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div id="progressBar" class="h-full bg-green-500 transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar" id="levelFilterBar">
+                    <button data-level="All" class="lvl-btn active">All Levels</button>
+                    <button data-level="A1" class="lvl-btn">A1</button>
+                    <button data-level="A2" class="lvl-btn">A2</button>
+                    <button data-level="B1" class="lvl-btn">B1</button>
+                    <button data-level="B2" class="lvl-btn">B2</button>
+                    <button data-level="Fav" class="lvl-btn text-yellow-600 dark:text-yellow-400"><i class="fa-solid fa-star mr-1"></i> Stars</button>
+                </div>
+
+                <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar" id="categoryList">
+                    <!-- JS populates buttons -->
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 flex flex-col justify-center items-center p-4 relative w-full max-w-md mx-auto touch-manipulation">
+            <div id="msgContainer" class="hidden absolute flex-col items-center justify-center text-center z-0">
+                <i id="msgIcon" class="fa-solid fa-check-circle text-5xl text-green-500 mb-3"></i>
+                <p id="msgText" class="text-gray-500 dark:text-gray-400 text-lg font-thai">All words learned!</p>
+                <button id="resetLearnedBtn" class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-full text-sm shadow-lg hover:bg-blue-700 transition-all">
+                    Reset Progress
+                </button>
+            </div>
+
+            <div class="w-full aspect-[4/5] max-h-[55vh] perspective-1000 cursor-pointer group z-10" id="cardContainer">
+                <div class="flashcard-inner bg-white dark:bg-gray-800 relative w-full h-full shadow-xl rounded-3xl transition-all duration-500 transform-style-3d" id="cardInner">
+                    <div class="absolute inset-0 w-full h-full backface-hidden flex flex-col justify-between p-8 rounded-3xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+                        <div class="flex justify-between items-start">
+                            <span id="cardLevel" class="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-xs px-2 py-1 rounded-full font-bold uppercase">--</span>
+                            <div class="flex gap-1">
+                                <button id="starBtn" class="text-gray-300 hover:text-yellow-500 transition-colors p-2" title="Add to Favorites">
+                                    <i class="fa-solid fa-star text-2xl"></i>
+                                </button>
+                                <button id="markLearnedBtn" class="text-gray-300 hover:text-green-500 transition-colors p-2" title="Mark as Learned">
+                                    <i class="fa-regular fa-circle-check text-2xl"></i>
+                                </button>
+                                <button id="speakBtnFront" class="text-gray-400 hover:text-blue-500 transition-colors p-2 active:scale-95">
+                                    <i class="fa-solid fa-volume-high text-2xl"></i>
+                                </button>
+                                <button id="micBtnFront" class="text-gray-400 hover:text-red-500 transition-colors p-2 active:scale-95" title="Practice Pronunciation">
+                                    <i class="fa-solid fa-microphone text-2xl"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4 relative">
+                            <h1 id="cardWord" class="text-5xl font-bold text-gray-800 dark:text-white mb-2 tracking-tight break-words leading-tight">Word</h1>
+                            <p id="pronunciationFeedback" class="absolute -top-8 left-1/2 transform -translate-x-1/2 text-sm font-bold opacity-0 transition-opacity duration-300 pointer-events-none whitespace-nowrap bg-white/90 dark:bg-gray-800/90 px-3 py-1 rounded-full shadow-md"></p>
+                            <p id="cardIpa" class="text-xl text-gray-400 font-mono">/ipa/</p>
+                            <span id="cardPos" class="inline-block mt-3 text-sm font-semibold px-3 py-1 rounded-full">pos</span>
+                        </div>
+
+                        <div class="text-center text-gray-300 text-xs animate-pulse font-bold tracking-widest uppercase">
+                            Tap to flip <i class="fa-solid fa-arrow-rotate-right ml-1"></i>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 flex flex-col justify-between p-8 rounded-3xl bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700">
+                        <div>
+                            <div class="flex items-center gap-2 mb-4">
+                                <span class="w-2 h-8 bg-blue-500 rounded-full"></span>
+                                <h2 class="text-xl font-bold text-gray-700 dark:text-gray-200 font-thai">ความหมาย</h2>
+                            </div>
+                            
+                            <p id="cardThai" class="text-3xl text-gray-800 dark:text-white font-thai mb-6 leading-relaxed">คำแปล</p>
+                            
+                            <div class="bg-white dark:bg-gray-700 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-600">
+                                <p class="text-[10px] text-gray-400 uppercase font-black mb-2 tracking-widest">Example</p>
+                                <p id="cardExample" class="text-lg text-gray-700 dark:text-gray-200 italic mb-2 leading-snug">"..."</p>
+                                <p id="cardExampleMeaning" class="text-sm text-gray-500 dark:text-gray-400 font-thai">"..."</p>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center mt-4">
+                             <button id="speakBtnBack" class="flex items-center gap-2 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 px-5 py-2.5 rounded-full hover:bg-blue-200 transition-colors shadow-sm font-bold text-sm">
+                                <i class="fa-solid fa-volume-high"></i> Listen again
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="p-3 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 max-w-md mx-auto w-full z-10 transition-colors duration-300">
+            <div class="flex justify-between items-center gap-3">
+                <button id="prevBtn" class="w-12 h-12 rounded-full border-2 border-gray-100 dark:border-gray-700 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center transition-all active:scale-90">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                
+                <button id="shuffleBtn" class="w-12 h-12 rounded-full border-2 border-gray-100 dark:border-gray-700 text-gray-400 hover:text-orange-500 flex items-center justify-center transition-all active:scale-90" title="Shuffle Cards">
+                    <i class="fa-solid fa-shuffle"></i>
+                </button>
+
+                <button id="quizModeBtn" class="flex-1 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-lg flex items-center justify-center gap-2 font-bold hover:opacity-90 transition-all active:scale-95">
+                    <i class="fa-solid fa-graduation-cap"></i> Quiz
+                </button>
+                
+                <button id="nextBtn" class="w-12 h-12 rounded-full border-2 border-gray-100 dark:border-gray-700 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center transition-all active:scale-90">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 2. TO-DO VIEW                                  -->
+    <!-- ============================================== -->
+    <div id="view-todo" class="flex-1 flex flex-col p-0 hidden w-full h-full pb-20">
+        <header class="bg-white dark:bg-gray-800 shadow-sm p-4 z-20 transition-colors duration-300">
+            <div class="max-w-md mx-auto flex flex-col gap-3">
+                <div class="flex justify-between items-center">
+                    <button onclick="switchTab('home')" class="text-gray-400 hover:text-green-500 transition-colors p-2">
+                        <i class="fa-solid fa-arrow-left text-2xl"></i>
+                    </button>
+                    <h2 class="text-2xl font-bold dark:text-white font-thai">สิ่งที่ต้องทำ (To-Do)</h2>
+                    <div class="w-10"></div>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="flex gap-2 bg-gray-100 dark:bg-gray-700 p-1 rounded-xl font-thai text-xs">
+                    <button onclick="window.currentTodoFilter='today'; this.parentElement.querySelectorAll('button').forEach(b=>b.className='flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400'); this.className='flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-green-600 dark:text-green-400 shadow-sm'; renderTodos();" class="flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-green-600 dark:text-green-400 shadow-sm">
+                        📅 งานวันนี้
+                    </button>
+                    <button onclick="window.currentTodoFilter='all'; this.parentElement.querySelectorAll('button').forEach(b=>b.className='flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400'); this.className='flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-green-600 dark:text-green-400 shadow-sm'; renderTodos();" class="flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400">
+                        📋 งานทั้งหมด
+                    </button>
+                </div>
+            </div>
+        </header>
+
         <main class="flex-1 overflow-y-auto p-4 w-full max-w-md mx-auto">
             <div id="todoList" class="flex flex-col gap-3"></div>
         </main>
+
         <footer class="p-4 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 w-full z-10 transition-colors duration-300">
-            <div class="max-w-md mx-auto flex gap-2">
-                <form id="todoForm" class="flex flex-1 gap-2">
-                    <input type="text" id="todoInput" placeholder="เพิ่มงานใหม่..." class="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-xl focus:ring-2 focus:ring-green-500 focus:outline-none transition-all placeholder-gray-400 font-thai" autocomplete="off">
-                    <button type="submit" class="w-12 h-12 bg-green-500 text-white rounded-xl shadow-lg hover:bg-green-600 transition-all active:scale-95 flex items-center justify-center shrink-0">
-                        <i class="fa-solid fa-plus text-xl"></i>
-                    </button>
+            <div class="max-w-md mx-auto">
+                <form id="todoForm" onsubmit="event.preventDefault(); addTodoFromForm();" class="flex flex-col gap-2.5">
+                    <div class="flex gap-2">
+                        <input type="text" id="todoInput" placeholder="เพิ่มงานใหม่..." class="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-xl focus:ring-2 focus:ring-green-500 focus:outline-none transition-all placeholder-gray-400 font-thai" autocomplete="off" required>
+                        <button type="submit" class="w-12 h-12 bg-green-500 text-white rounded-xl shadow-lg hover:bg-green-600 transition-all active:scale-95 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-plus text-xl"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-gray-400 dark:text-gray-500 font-thai shrink-0">การวนซ้ำ:</span>
+                        <select id="todoRepeatType" onchange="document.getElementById('todoDaysContainer').classList.toggle('hidden', this.value !== 'days');" class="flex-1 px-3 py-2 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-xl text-xs font-thai font-bold focus:outline-none">
+                            <option value="none">📌 ทำครั้งเดียว (Today Only)</option>
+                            <option value="daily">🔄 ทุกวันตลอดไป (Everyday)</option>
+                            <option value="days">📅 ระบุวันในสัปดาห์ (Specific Days)</option>
+                        </select>
+                    </div>
+
+                    <!-- Day of week selector buttons -->
+                    <div id="todoDaysContainer" class="hidden flex gap-1.5 justify-between pt-1 font-thai">
+                        <button type="button" data-day="1" onclick="this.classList.toggle('selected'); this.classList.toggle('bg-green-500'); this.classList.toggle('text-white'); this.classList.toggle('bg-gray-100'); this.classList.toggle('dark:bg-gray-700');" class="todo-day-btn flex-1 py-1.5 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">จ</button>
+                        <button type="button" data-day="2" onclick="this.classList.toggle('selected'); this.classList.toggle('bg-green-500'); this.classList.toggle('text-white'); this.classList.toggle('bg-gray-100'); this.classList.toggle('dark:bg-gray-700');" class="todo-day-btn flex-1 py-1.5 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">อ</button>
+                        <button type="button" data-day="3" onclick="this.classList.toggle('selected'); this.classList.toggle('bg-green-500'); this.classList.toggle('text-white'); this.classList.toggle('bg-gray-100'); this.classList.toggle('dark:bg-gray-700');" class="todo-day-btn flex-1 py-1.5 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">พ</button>
+                        <button type="button" data-day="4" onclick="this.classList.toggle('selected'); this.classList.toggle('bg-green-500'); this.classList.toggle('text-white'); this.classList.toggle('bg-gray-100'); this.classList.toggle('dark:bg-gray-700');" class="todo-day-btn flex-1 py-1.5 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">พฤ</button>
+                        <button type="button" data-day="5" onclick="this.classList.toggle('selected'); this.classList.toggle('bg-green-500'); this.classList.toggle('text-white'); this.classList.toggle('bg-gray-100'); this.classList.toggle('dark:bg-gray-700');" class="todo-day-btn flex-1 py-1.5 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">ศ</button>
+                        <button type="button" data-day="6" onclick="this.classList.toggle('selected'); this.classList.toggle('bg-green-500'); this.classList.toggle('text-white'); this.classList.toggle('bg-gray-100'); this.classList.toggle('dark:bg-gray-700');" class="todo-day-btn flex-1 py-1.5 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">ส</button>
+                        <button type="button" data-day="0" onclick="this.classList.toggle('selected'); this.classList.toggle('bg-green-500'); this.classList.toggle('text-white'); this.classList.toggle('bg-gray-100'); this.classList.toggle('dark:bg-gray-700');" class="todo-day-btn flex-1 py-1.5 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">อา</button>
+                    </div>
                 </form>
             </div>
         </footer>
     </div>
 
-    <!-- 2. Quiz Modal -->
+    <!-- ============================================== -->
+    <!-- 3. FINANCE & EXPENSE TRACKER VIEW              -->
+    <!-- ============================================== -->
+    <div id="view-finance" class="flex-1 flex flex-col hidden w-full h-full pb-20">
+        <header class="bg-white dark:bg-gray-800 shadow-sm p-4 z-20">
+            <div class="max-w-md mx-auto flex flex-col gap-3">
+                <div class="flex justify-between items-center">
+                    <button onclick="switchTab('home')" class="text-gray-400 hover:text-rose-500 transition-colors p-2">
+                        <i class="fa-solid fa-arrow-left text-2xl"></i>
+                    </button>
+                    <h2 class="text-xl font-bold dark:text-white font-thai">กระเป๋าเงิน (Finance)</h2>
+                    <div class="w-10"></div>
+                </div>
+
+                <!-- Timeframe Period Selector Tabs -->
+                <div class="flex gap-2 bg-gray-100 dark:bg-gray-700 p-1 rounded-xl font-thai text-xs">
+                    <button onclick="changeFinPeriod('month'); this.parentElement.querySelectorAll('button').forEach(b=>b.className='flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400'); this.className='flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-rose-600 dark:text-rose-400 shadow-sm';" class="flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-rose-600 dark:text-rose-400 shadow-sm">
+                        📅 สรุปรายเดือน
+                    </button>
+                    <button onclick="changeFinPeriod('year'); this.parentElement.querySelectorAll('button').forEach(b=>b.className='flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400'); this.className='flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-rose-600 dark:text-rose-400 shadow-sm';" class="flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400">
+                        📆 สรุปรายปี
+                    </button>
+                    <button onclick="changeFinPeriod('all'); this.parentElement.querySelectorAll('button').forEach(b=>b.className='flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400'); this.className='flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-rose-600 dark:text-rose-400 shadow-sm';" class="flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400">
+                        ♾️ ทั้งหมด
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 max-w-md mx-auto w-full space-y-4">
+            <!-- Period Navigator -->
+            <div class="flex items-center justify-between bg-white dark:bg-gray-800 px-4 py-2 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <button onclick="prevFinPeriod()" class="p-2 text-gray-400 hover:text-rose-500 transition-colors">
+                    <i class="fa-solid fa-chevron-left text-sm"></i>
+                </button>
+                <span id="finPeriodLabel" class="font-bold text-gray-800 dark:text-gray-100 font-thai text-sm">กรกฎาคม 2569</span>
+                <button onclick="nextFinPeriod()" class="p-2 text-gray-400 hover:text-rose-500 transition-colors">
+                    <i class="fa-solid fa-chevron-right text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Balance Card -->
+            <div class="bg-gradient-to-r from-rose-500 to-pink-600 text-white p-5 rounded-3xl shadow-xl">
+                <span class="text-xs font-bold opacity-80 uppercase tracking-wider font-thai">ยอดเงินคงเหลือสุทธิ (ช่วงเวลานี้)</span>
+                <h1 id="netBalance" class="text-4xl font-black mt-1">฿0</h1>
+                
+                <div class="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-white/20">
+                    <div>
+                        <span class="text-xs opacity-75 font-thai">รายรับรวม</span>
+                        <p id="totalIncome" class="text-lg font-bold text-emerald-200">+฿0</p>
+                    </div>
+                    <div>
+                        <span class="text-xs opacity-75 font-thai">รายจ่ายรวม</span>
+                        <p id="totalExpense" class="text-lg font-bold text-rose-200">-฿0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Breakdown Widget -->
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-3">
+                <h3 class="font-bold text-xs uppercase tracking-wider text-gray-400 font-thai flex items-center justify-between">
+                    <span>📊 สรุปรายจ่ายแยกตามหมวดหมู่</span>
+                </h3>
+                <div id="finCategoryBreakdown" class="space-y-2.5"></div>
+            </div>
+
+            <!-- Add Transaction Form -->
+            <form id="financeForm" onsubmit="event.preventDefault(); addTransaction(document.getElementById('finType').value, document.getElementById('finCat').value, document.getElementById('finAmount').value, document.getElementById('finNote').value); document.getElementById('finAmount').value=''; document.getElementById('finNote').value='';" class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-3">
+                <h3 class="font-bold text-sm text-gray-700 dark:text-gray-300 font-thai">เพิ่มรายการใหม่</h3>
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="finType" class="px-3 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none">
+                        <option value="expense">🔴 รายจ่าย (Expense)</option>
+                        <option value="income">🟢 รายรับ (Income)</option>
+                    </select>
+                    <select id="finCat" class="px-3 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none">
+                        <option value="อาหาร">🍔 อาหาร</option>
+                        <option value="เดินทาง">🚗 เดินทาง</option>
+                        <option value="ช้อปปิ้ง">🛍️ ช้อปปิ้ง</option>
+                        <option value="ความบันเทิง">🎬 ความบันเทิง</option>
+                        <option value="เงินเดือน/รายได้">💰 รายได้</option>
+                        <option value="อื่นๆ">📌 อื่นๆ</option>
+                    </select>
+                </div>
+                <div class="flex gap-2">
+                    <input type="number" id="finAmount" placeholder="จำนวนเงิน (บาท)..." step="any" required class="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none">
+                    <input type="text" id="finNote" placeholder="บันทึกย่อ..." class="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none">
+                </div>
+                <button type="submit" class="w-full py-3 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-xl shadow-md transition-all font-thai text-sm">
+                    + บันทึกรายการ
+                </button>
+            </form>
+
+            <!-- Transaction List -->
+            <div class="space-y-2">
+                <h3 class="font-bold text-xs uppercase tracking-wider text-gray-400 font-thai">ประวัติรายการ</h3>
+                <div id="financeList" class="space-y-2"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 4. WATER INTAKE TRACKER VIEW                   -->
+    <!-- ============================================== -->
+    <div id="view-water" class="flex-1 flex flex-col hidden w-full h-full pb-20">
+        <header class="bg-white dark:bg-gray-800 shadow-sm p-4 z-20">
+            <div class="max-w-md mx-auto flex justify-between items-center">
+                <button onclick="switchTab('home')" class="text-gray-400 hover:text-cyan-500 transition-colors p-2">
+                    <i class="fa-solid fa-arrow-left text-2xl"></i>
+                </button>
+                <h2 class="text-xl font-bold dark:text-white font-thai">ติดตามการดื่มน้ำ (Water Tracker)</h2>
+                <div class="w-10"></div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 max-w-md mx-auto w-full flex flex-col items-center justify-between space-y-6">
+            <!-- Liquid Gauge Circle / Bottle -->
+            <div class="relative w-56 h-56 rounded-full bg-cyan-50 dark:bg-gray-800 border-4 border-cyan-200 dark:border-cyan-800 flex flex-col items-center justify-center shadow-xl overflow-hidden mt-4">
+                <!-- Wave Bar Animation -->
+                <div id="waterWaveBar" class="absolute bottom-0 w-full bg-gradient-to-t from-cyan-600 to-blue-400 transition-all duration-700 ease-out" style="height: 0%"></div>
+                
+                <div class="relative z-10 text-center">
+                    <i class="fa-solid fa-droplet text-3xl text-cyan-400 mb-1 animate-bounce"></i>
+                    <h1 id="waterPercent" class="text-4xl font-black text-gray-800 dark:text-white">0%</h1>
+                    <p class="text-sm font-bold text-gray-600 dark:text-gray-300 mt-1 font-thai">
+                        <span id="waterCurrent">0</span> / <span id="waterGoal">2000</span> ml
+                    </p>
+                </div>
+            </div>
+
+            <!-- Quick Add Water Buttons -->
+            <div class="w-full space-y-3">
+                <h3 class="text-center font-bold text-xs uppercase text-gray-400 tracking-wider font-thai">กดเติมน้ำตามปริมาณ</h3>
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="addWater(200)" class="flex flex-col items-center justify-center p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-cyan-100 dark:border-gray-700 hover:border-cyan-400 active:scale-95 transition-all">
+                        <i class="fa-solid fa-glass-water text-2xl text-cyan-500 mb-1"></i>
+                        <span class="font-bold text-sm text-gray-800 dark:text-gray-200">+200 ml</span>
+                        <span class="text-[10px] text-gray-400 font-thai">แก้วเล็ก</span>
+                    </button>
+
+                    <button onclick="addWater(350)" class="flex flex-col items-center justify-center p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-cyan-100 dark:border-gray-700 hover:border-cyan-400 active:scale-95 transition-all">
+                        <i class="fa-solid fa-bottle-water text-2xl text-blue-500 mb-1"></i>
+                        <span class="font-bold text-sm text-gray-800 dark:text-gray-200">+350 ml</span>
+                        <span class="text-[10px] text-gray-400 font-thai">ขวดเล็ก</span>
+                    </button>
+
+                    <button onclick="addWater(500)" class="flex flex-col items-center justify-center p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-cyan-100 dark:border-gray-700 hover:border-cyan-400 active:scale-95 transition-all">
+                        <i class="fa-solid fa-whiskey-glass text-2xl text-indigo-500 mb-1"></i>
+                        <span class="font-bold text-sm text-gray-800 dark:text-gray-200">+500 ml</span>
+                        <span class="text-[10px] text-gray-400 font-thai">ขวดใหญ่</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Reset Water Button -->
+            <button onclick="resetWater()" class="text-xs font-bold text-gray-400 hover:text-red-500 transition-colors font-thai py-2">
+                <i class="fa-solid fa-rotate-left mr-1"></i> รีเซ็ตการดื่มน้ำของวันนี้
+            </button>
+        </main>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 5. HABIT TRACKER VIEW                          -->
+    <!-- ============================================== -->
+    <div id="view-habit" class="flex-1 flex flex-col hidden w-full h-full pb-20">
+        <header class="bg-white dark:bg-gray-800 shadow-sm p-4 z-20">
+            <div class="max-w-md mx-auto flex justify-between items-center">
+                <button onclick="switchTab('home')" class="text-gray-400 hover:text-amber-500 transition-colors p-2">
+                    <i class="fa-solid fa-arrow-left text-2xl"></i>
+                </button>
+                <h2 class="text-xl font-bold dark:text-white font-thai">ติดตามนิสัย (Habit Tracker)</h2>
+                <div class="w-10"></div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 max-w-md mx-auto w-full space-y-4">
+            <!-- Add Habit Form -->
+            <form id="habitForm" onsubmit="event.preventDefault(); const inp = document.getElementById('habitInput'); addHabit(inp.value); inp.value='';" class="flex gap-2 bg-white dark:bg-gray-800 p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <input type="text" id="habitInput" placeholder="เพิ่มนิสัยใหม่ที่ต้องการทำ (เช่น อ่านหนังสือ)..." required class="flex-1 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none">
+                <button type="submit" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-sm text-sm font-thai shrink-0">
+                    + เพิ่ม
+                </button>
+            </form>
+
+            <!-- Habit List -->
+            <div class="space-y-2">
+                <h3 class="font-bold text-xs uppercase tracking-wider text-gray-400 font-thai">นิสัยทั้งหมด</h3>
+                <div id="habitList" class="space-y-2"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 6. SETTINGS & DATABASE VIEW                    -->
+    <!-- ============================================== -->
+    <div id="view-settings" class="flex-1 flex flex-col p-6 hidden max-w-md mx-auto w-full pt-12 pb-24 overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="switchTab('home')" class="text-gray-400 hover:text-blue-500 transition-colors p-2">
+                <i class="fa-solid fa-arrow-left text-2xl"></i>
+            </button>
+            <div class="flex items-center gap-2">
+                <img src="logo.png" alt="MY FEE Logo" class="w-8 h-8 rounded-full object-cover border border-blue-500 p-0.5">
+                <h2 class="text-2xl font-bold dark:text-white text-center">Settings</h2>
+            </div>
+            <div class="w-10"></div>
+        </div>
+
+        <div class="space-y-6">
+            <!-- App Options -->
+            <div class="space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 font-thai">การตั้งค่าแอปพลิเคชัน</h3>
+                
+                <div class="flex justify-between items-center cursor-pointer p-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl transition-colors shadow-sm border border-gray-100 dark:border-gray-700">
+                    <span class="dark:text-gray-200 font-semibold flex items-center text-sm"><i class="fa-solid fa-moon text-lg mr-3 text-blue-500"></i> Dark Mode</span>
+                    <button id="toggleDark" class="w-12 h-6 bg-gray-200 dark:bg-blue-600 rounded-full relative transition-colors">
+                        <span class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform dark:translate-x-6 shadow-sm"></span>
+                    </button>
+                </div>
+
+                <div class="flex justify-between items-center cursor-pointer p-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl transition-colors shadow-sm border border-gray-100 dark:border-gray-700">
+                    <span class="dark:text-gray-200 font-semibold flex items-center text-sm"><i class="fa-solid fa-volume-high text-lg mr-3 text-green-500"></i> Auto-play Audio</span>
+                    <button id="toggleAudio" class="w-12 h-6 bg-gray-200 rounded-full relative transition-colors">
+                        <span class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow-sm"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Local Database Management Card -->
+            <div class="space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 font-thai flex items-center gap-1.5">
+                    <i class="fa-solid fa-database text-blue-500"></i> จัดการฐานข้อมูลส่วนตัว (Offline 100%)
+                </h3>
+                
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-4">
+                    <!-- DB Stats Container -->
+                    <div id="dbStatsContainer"></div>
+
+                    <!-- DB Actions -->
+                    <div class="space-y-2 pt-2">
+                        <button onclick="exportDatabase()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition-all font-thai text-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> สำรองและดาวน์โหลดข้อมูล (.json)
+                        </button>
+
+                        <input type="file" id="importFileInput" accept=".json" onchange="importDatabase(event)" class="hidden">
+                        <button onclick="document.getElementById('importFileInput').click()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all font-thai text-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-file-import"></i> นำเข้าข้อมูลคืนค่า (Import Backup)
+                        </button>
+
+                        <button onclick="clearAllDatabase()" class="w-full py-3 bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/40 font-bold rounded-xl transition-all font-thai text-xs flex items-center justify-center gap-2 mt-4">
+                            <i class="fa-solid fa-trash-can"></i> ล้างฐานข้อมูลทั้งหมด
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button id="resetProgressBtn" class="w-full py-4 text-gray-400 font-bold bg-gray-100 dark:bg-gray-800 hover:text-red-500 rounded-2xl transition-colors text-xs font-thai">
+                <i class="fa-solid fa-rotate-left mr-1"></i> Reset Learned Words Only
+            </button>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 7. Quiz Modal                                  -->
+    <!-- ============================================== -->
     <div id="quizModal" class="fixed inset-0 bg-white dark:bg-gray-900 hidden z-50 flex flex-col">
         <div class="p-4 flex justify-between items-center border-b dark:border-gray-700">
             <button id="closeQuiz" class="text-gray-500 dark:text-gray-300"><i class="fa-solid fa-arrow-left text-xl"></i> Back</button>
@@ -272,9 +687,7 @@
                 <button id="quizSpeakBtn" class="text-blue-500 hover:text-blue-600"><i class="fa-solid fa-volume-high text-2xl"></i></button>
             </div>
             
-            <div id="quizOptions" class="grid grid-cols-1 gap-3 w-full">
-                <!-- Options injected by JS -->
-            </div>
+            <div id="quizOptions" class="grid grid-cols-1 gap-3 w-full"></div>
             
             <div id="quizInputContainer" class="hidden w-full flex flex-col gap-3">
                 <input type="text" id="quizInput" class="w-full px-4 py-3 bg-gray-100 dark:bg-gray-800 dark:text-white border-2 border-transparent focus:border-blue-500 rounded-xl outline-none text-center text-xl font-bold" placeholder="Type the English word..." autocomplete="off" autocorrect="off" autocapitalize="none">
@@ -292,6 +705,38 @@
     </div>
 
     <!-- ============================================== -->
+    <!-- FIXED BOTTOM NAVIGATION DOCK                   -->
+    <!-- ============================================== -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-t border-gray-200/50 dark:border-gray-700/50 max-w-md mx-auto px-2 py-1">
+        <div class="flex justify-around items-center">
+            <button id="tab-home" onclick="switchTab('home')" class="flex flex-col items-center justify-center p-2 rounded-xl text-blue-600 dark:text-blue-400 transition-colors">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="text-[10px] font-bold font-thai mt-0.5">หน้าแรก</span>
+            </button>
+            <button id="tab-flashcards" onclick="switchTab('flashcards')" class="flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
+                <i class="fa-solid fa-graduation-cap text-lg"></i>
+                <span class="text-[10px] font-bold font-thai mt-0.5">คำศัพท์</span>
+            </button>
+            <button id="tab-todo" onclick="switchTab('todo')" class="flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
+                <i class="fa-solid fa-list-check text-lg"></i>
+                <span class="text-[10px] font-bold font-thai mt-0.5">To-Do</span>
+            </button>
+            <button id="tab-finance" onclick="switchTab('finance')" class="flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
+                <i class="fa-solid fa-wallet text-lg"></i>
+                <span class="text-[10px] font-bold font-thai mt-0.5">เงิน</span>
+            </button>
+            <button id="tab-water" onclick="switchTab('water')" class="flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
+                <i class="fa-solid fa-droplet text-lg"></i>
+                <span class="text-[10px] font-bold font-thai mt-0.5">น้ำ</span>
+            </button>
+            <button id="tab-habit" onclick="switchTab('habit')" class="flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
+                <i class="fa-solid fa-bolt text-lg"></i>
+                <span class="text-[10px] font-bold font-thai mt-0.5">นิสัย</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============================================== -->
     <!-- Scripts (Separated by features)                -->
     <!-- ============================================== -->
     <script src="./data.js"></script>
@@ -299,9 +744,14 @@
     <script src="./js/core/dom.js"></script>
     <script src="./js/core/navigation.js"></script>
     <script src="./js/core/settings.js"></script>
+    <script src="./js/features/finance.js"></script>
+    <script src="./js/features/water.js"></script>
+    <script src="./js/features/habit.js"></script>
+    <script src="./js/features/dashboard.js"></script>
     <script src="./js/todo/todo.js"></script>
     <script src="./js/flashcards/quiz.js"></script>
     <script src="./js/flashcards/flashcards.js"></script>
+    <script src="./js/features/database.js"></script>
     <script src="./js/main.js"></script>
     <script>
         if ('serviceWorker' in navigator) {

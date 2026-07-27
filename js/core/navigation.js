@@ -1,27 +1,40 @@
 // FILE: js/navigation.js
 // --- Navigation ---
 function switchTab(tabId) {
-    if (els['view-home']) els['view-home'].classList.add('hidden');
-    if (els['view-flashcards']) els['view-flashcards'].classList.add('hidden');
-    if (els['view-settings']) els['view-settings'].classList.add('hidden');
-    if (els['view-todo']) els['view-todo'].classList.add('hidden');
-    
-    if (els['tab-home']) els['tab-home'].classList.replace('text-blue-600', 'text-gray-400');
-    if (els['tab-flashcards']) els['tab-flashcards'].classList.replace('text-blue-600', 'text-gray-400');
-    if (els['tab-settings']) els['tab-settings'].classList.replace('text-blue-600', 'text-gray-400');
-    
-    if (els[`view-${tabId}`]) els[`view-${tabId}`].classList.remove('hidden');
-    if (els[`tab-${tabId}`]) {
-        els[`tab-${tabId}`].classList.replace('text-gray-400', 'text-blue-600');
+    const views = ['home', 'flashcards', 'settings', 'todo', 'finance', 'water', 'habit'];
+    views.forEach(v => {
+        const viewEl = document.getElementById(`view-${v}`);
+        if (viewEl) viewEl.classList.add('hidden');
+
+        const tabEl = document.getElementById(`tab-${v}`);
+        if (tabEl) {
+            tabEl.classList.remove('text-blue-600', 'dark:text-blue-400', 'bg-blue-50', 'dark:bg-blue-900/30');
+            tabEl.classList.add('text-gray-400');
+        }
+    });
+
+    const activeView = document.getElementById(`view-${tabId}`);
+    if (activeView) activeView.classList.remove('hidden');
+
+    const activeTab = document.getElementById(`tab-${tabId}`);
+    if (activeTab) {
+        activeTab.classList.remove('text-gray-400');
+        activeTab.classList.add('text-blue-600', 'dark:text-blue-400', 'bg-blue-50', 'dark:bg-blue-900/30');
     }
-    
-    // Update home stats if navigating to home
-    if (tabId === 'home') {
-        if (els.homeCardsFlipped) els.homeCardsFlipped.textContent = state.streak.cardsFlippedToday;
-        if (els.homeStreak) els.homeStreak.textContent = state.streak.count;
-    }
-    if (tabId === 'todo') {
+
+    // Trigger tab specific renderers
+    if (tabId === 'home' && typeof updateDashboard === 'function') {
+        updateDashboard();
+    } else if (tabId === 'todo' && typeof renderTodos === 'function') {
         renderTodos();
+    } else if (tabId === 'finance' && typeof renderFinance === 'function') {
+        renderFinance();
+    } else if (tabId === 'water' && typeof renderWater === 'function') {
+        renderWater();
+    } else if (tabId === 'habit' && typeof renderHabits === 'function') {
+        renderHabits();
+    } else if (tabId === 'settings' && typeof renderDatabaseStats === 'function') {
+        renderDatabaseStats();
     }
 }
 window.switchTab = switchTab;
