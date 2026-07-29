@@ -1,7 +1,34 @@
 // FILE: js/main.js
 // --- Initialization & Events ---
 
+function runDataMigration() {
+    // Migrate Todos
+    let todosChanged = false;
+    state.todos.forEach(todo => {
+        if (!todo.priority) { todo.priority = 'med'; todosChanged = true; }
+        if (!todo.category) { todo.category = 'general'; todosChanged = true; }
+    });
+    if (todosChanged) localStorage.setItem('todoData', JSON.stringify(state.todos));
+
+    // Migrate Habits
+    let habitsChanged = false;
+    state.habits.forEach(habit => {
+        if (!habit.routine) { habit.routine = 'morning'; habitsChanged = true; }
+        if (!habit.history) { habit.history = []; habitsChanged = true; }
+    });
+    if (habitsChanged) localStorage.setItem('habitData', JSON.stringify(state.habits));
+
+    // Settings migration happens inherently via state.js defaults, but let's ensure it's saved
+    if (state.settings.dailyBudget === undefined) {
+        state.settings.dailyBudget = 0;
+        state.settings.monthlyBudget = 0;
+        state.settings.lastBackupDate = null;
+        localStorage.setItem('appSettings', JSON.stringify(state.settings));
+    }
+}
+
 function init() {
+    runDataMigration();
     getElements();
     
     // Safety check
@@ -68,6 +95,7 @@ function setupEventListeners() {
     if (els.speakBtnBack) els.speakBtnBack.onclick = (e) => { e.stopPropagation(); speak(state.cards[state.index].word); };
     if (els.markLearnedBtn) els.markLearnedBtn.onclick = (e) => { e.stopPropagation(); toggleLearned(); };
     if (els.starBtn) els.starBtn.onclick = (e) => { e.stopPropagation(); toggleFavorite(); };
+    if (els.reviewBtn) els.reviewBtn.onclick = (e) => { e.stopPropagation(); toggleReview(); };
     
     if (els.resetLearnedBtn) els.resetLearnedBtn.onclick = resetProgress;
     if (els.resetProgressBtn) els.resetProgressBtn.onclick = resetProgress;

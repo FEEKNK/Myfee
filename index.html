@@ -59,6 +59,38 @@
         </header>
 
         <main class="max-w-md mx-auto w-full p-4 space-y-5">
+            <!-- Smart Greeting -->
+            <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col gap-2">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 id="dashGreeting" class="text-xl font-bold text-gray-800 dark:text-white font-thai">สวัสดี, วันนี้เป็นยังไงบ้าง?</h1>
+                        <p id="dashGreetingSub" class="text-sm text-gray-500 dark:text-gray-400 font-thai">มีสิ่งที่คุณยังต้องทำอีกเพียบเลย ลุยกัน!</p>
+                    </div>
+                    <div class="text-4xl" id="dashGreetingIcon">☀️</div>
+                </div>
+            </div>
+
+            <!-- Focus & Cooldown Widget -->
+            <div class="bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-4 rounded-3xl shadow-md flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-stopwatch text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm font-thai tracking-wide">Focus Mode</h3>
+                        <div class="text-2xl font-black font-mono tracking-widest" id="focusTimerDisplay">25:00</div>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button id="focusStartBtn" onclick="toggleFocusTimer()" class="w-10 h-10 bg-white text-indigo-600 rounded-full flex items-center justify-center shadow-sm hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-play" id="focusPlayIcon"></i>
+                    </button>
+                    <button onclick="resetFocusTimer()" class="w-10 h-10 bg-indigo-700 text-white rounded-full flex items-center justify-center shadow-sm hover:scale-105 transition-transform opacity-80 hover:opacity-100">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                </div>
+            </div>
+
             <!-- Summary Overview Section -->
             <div class="space-y-3">
                 <h2 class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 font-thai">สรุปภาพรวมวันนี้ (Daily Overview)</h2>
@@ -202,6 +234,10 @@
                         <i class="fa-solid fa-fire mr-1"></i> <span id="streakCount">0</span>
                     </div>
 
+                    <button onclick="document.getElementById('addWordModal').classList.remove('hidden')" class="p-2 text-gray-400 hover:text-green-500 transition-colors" title="Add Custom Word">
+                        <i class="fa-solid fa-plus-circle text-xl"></i>
+                    </button>
+
                     <button onclick="switchTab('settings')" class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Settings">
                         <i class="fa-solid fa-gear text-xl"></i>
                     </button>
@@ -224,6 +260,7 @@
                     <button data-level="B1" class="lvl-btn">B1</button>
                     <button data-level="B2" class="lvl-btn">B2</button>
                     <button data-level="Fav" class="lvl-btn text-yellow-600 dark:text-yellow-400"><i class="fa-solid fa-star mr-1"></i> Stars</button>
+                    <button data-level="Review" class="lvl-btn text-orange-600 dark:text-orange-400"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Review</button>
                 </div>
 
                 <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar" id="categoryList">
@@ -249,6 +286,9 @@
                             <div class="flex gap-1">
                                 <button id="starBtn" class="text-gray-300 hover:text-yellow-500 transition-colors p-2" title="Add to Favorites">
                                     <i class="fa-solid fa-star text-2xl"></i>
+                                </button>
+                                <button id="reviewBtn" class="text-gray-300 hover:text-orange-500 transition-colors p-2" title="Needs Review">
+                                    <i class="fa-solid fa-clock-rotate-left text-2xl"></i>
                                 </button>
                                 <button id="markLearnedBtn" class="text-gray-300 hover:text-green-500 transition-colors p-2" title="Mark as Learned">
                                     <i class="fa-regular fa-circle-check text-2xl"></i>
@@ -338,10 +378,13 @@
                 <!-- Filter Tabs -->
                 <div class="flex gap-2 bg-gray-100 dark:bg-gray-700 p-1 rounded-xl font-thai text-xs">
                     <button onclick="window.currentTodoFilter='today'; this.parentElement.querySelectorAll('button').forEach(b=>b.className='flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400'); this.className='flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-green-600 dark:text-green-400 shadow-sm'; renderTodos();" class="flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-green-600 dark:text-green-400 shadow-sm">
-                        📅 งานวันนี้
+                        📅 วันนี้
                     </button>
                     <button onclick="window.currentTodoFilter='all'; this.parentElement.querySelectorAll('button').forEach(b=>b.className='flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400'); this.className='flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-green-600 dark:text-green-400 shadow-sm'; renderTodos();" class="flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400">
-                        📋 งานทั้งหมด
+                        📋 ทั้งหมด
+                    </button>
+                    <button onclick="window.currentTodoFilter='archive'; this.parentElement.querySelectorAll('button').forEach(b=>b.className='flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400'); this.className='flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-green-600 dark:text-green-400 shadow-sm'; renderTodos();" class="flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400">
+                        📜 ประวัติ
                     </button>
                 </div>
             </div>
@@ -359,6 +402,20 @@
                         <button type="submit" class="w-12 h-12 bg-green-500 text-white rounded-xl shadow-lg hover:bg-green-600 transition-all active:scale-95 flex items-center justify-center shrink-0">
                             <i class="fa-solid fa-plus text-xl"></i>
                         </button>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <select id="todoPriority" class="flex-1 px-3 py-2 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-xl text-xs font-thai font-bold focus:outline-none focus:ring-2 focus:ring-green-500 text-center">
+                            <option value="high">🔴 สำคัญมาก</option>
+                            <option value="med" selected>🟡 ทั่วไป</option>
+                            <option value="low">🔵 ว่างค่อยทำ</option>
+                        </select>
+                        <select id="todoCategory" class="flex-1 px-3 py-2 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-xl text-xs font-thai font-bold focus:outline-none focus:ring-2 focus:ring-green-500 text-center">
+                            <option value="general">📝 ทั่วไป</option>
+                            <option value="work">🏢 งาน/เรียน</option>
+                            <option value="home">🏠 บ้าน</option>
+                            <option value="personal">💪 ส่วนตัว</option>
+                        </select>
                     </div>
 
                     <div class="flex items-center gap-2">
@@ -423,6 +480,27 @@
                 <span id="finPeriodLabel" class="font-bold text-gray-800 dark:text-gray-100 font-thai text-sm">กรกฎาคม 2569</span>
                 <button onclick="nextFinPeriod()" class="p-2 text-gray-400 hover:text-rose-500 transition-colors">
                     <i class="fa-solid fa-chevron-right text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Search, Filter & Export -->
+            <div class="flex gap-2">
+                <div class="flex-1 relative">
+                    <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
+                    <input type="text" id="finSearchInput" oninput="renderFinance()" placeholder="ค้นหารายการ..." class="w-full pl-8 pr-3 py-2 bg-white dark:bg-gray-800 dark:text-white border border-gray-100 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-rose-500 focus:outline-none transition-all placeholder-gray-400 font-thai text-xs shadow-sm">
+                </div>
+                <select id="finFilterCat" onchange="renderFinance()" class="px-2 py-2 bg-white dark:bg-gray-800 dark:text-white border border-gray-100 dark:border-gray-700 rounded-xl text-xs font-thai font-bold focus:outline-none shadow-sm text-gray-600 dark:text-gray-300">
+                    <option value="All">ทุกหมวดหมู่</option>
+                    <option value="อาหาร">🍔 อาหาร</option>
+                    <option value="เดินทาง">🚕 เดินทาง</option>
+                    <option value="ช้อปปิ้ง">🛍️ ช้อปปิ้ง</option>
+                    <option value="บันเทิง">🎬 บันเทิง</option>
+                    <option value="บิลต่างๆ">🧾 บิลต่างๆ</option>
+                    <option value="เงินเดือน">💰 เงินเดือน</option>
+                    <option value="อื่นๆ">📦 อื่นๆ</option>
+                </select>
+                <button onclick="exportFinanceCSV()" class="px-3 py-2 bg-green-500 text-white rounded-xl shadow-sm hover:bg-green-600 transition-all text-xs font-bold" title="ส่งออก CSV">
+                    <i class="fa-solid fa-file-csv"></i>
                 </button>
             </div>
 
@@ -503,11 +581,18 @@
 
         <main class="flex-1 overflow-y-auto p-4 max-w-md mx-auto w-full space-y-4">
             <!-- Add Habit Form -->
-            <form id="habitForm" onsubmit="event.preventDefault(); const inp = document.getElementById('habitInput'); addHabit(inp.value); inp.value='';" class="flex gap-2 bg-white dark:bg-gray-800 p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
-                <input type="text" id="habitInput" placeholder="เพิ่มนิสัยใหม่ที่ต้องการทำ (เช่น อ่านหนังสือ)..." required class="flex-1 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none">
-                <button type="submit" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-sm text-sm font-thai shrink-0">
-                    + เพิ่ม
-                </button>
+            <form id="habitForm" onsubmit="event.preventDefault(); const inp = document.getElementById('habitInput'); const rType = document.getElementById('habitRoutineType').value; addHabit(inp.value, rType); inp.value='';" class="flex flex-col gap-2 bg-white dark:bg-gray-800 p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <input type="text" id="habitInput" placeholder="เพิ่มนิสัยใหม่ที่ต้องการทำ..." required class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none">
+                <div class="flex gap-2">
+                    <select id="habitRoutineType" class="flex-1 px-3 py-2 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-xl text-xs font-thai font-bold focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        <option value="morning">🌅 กิจวัตรยามเช้า (Morning)</option>
+                        <option value="afternoon">☀️ ระหว่างวัน (Afternoon)</option>
+                        <option value="evening">🌙 ก่อนนอน (Evening)</option>
+                    </select>
+                    <button type="submit" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-sm text-sm font-thai shrink-0">
+                        + เพิ่ม
+                    </button>
+                </div>
             </form>
 
             <!-- Habit List -->
@@ -553,6 +638,23 @@
                 </div>
             </div>
 
+            <!-- Budget Settings -->
+            <div class="space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 font-thai flex items-center gap-1.5">
+                    <i class="fa-solid fa-wallet text-rose-500"></i> ตั้งค่างบประมาณ (Budget)
+                </h3>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-semibold dark:text-gray-200 font-thai">งบรายวันสูงสุด (บาท)</span>
+                        <input type="number" id="settingDailyBudget" onchange="state.settings.dailyBudget=Number(this.value); saveSettings(); if(typeof updateDashboard==='function') updateDashboard();" class="w-24 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-lg text-sm text-center font-bold focus:ring-2 focus:ring-rose-500" placeholder="ไม่มี">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-semibold dark:text-gray-200 font-thai">งบรายเดือนสูงสุด (บาท)</span>
+                        <input type="number" id="settingMonthlyBudget" onchange="state.settings.monthlyBudget=Number(this.value); saveSettings(); if(typeof updateDashboard==='function') updateDashboard();" class="w-24 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-lg text-sm text-center font-bold focus:ring-2 focus:ring-rose-500" placeholder="ไม่มี">
+                    </div>
+                </div>
+            </div>
+
             <!-- Local Database Management Card -->
             <div class="space-y-3">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 font-thai flex items-center gap-1.5">
@@ -573,6 +675,18 @@
                         <button onclick="document.getElementById('importFileInput').click()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all font-thai text-sm flex items-center justify-center gap-2">
                             <i class="fa-solid fa-file-import"></i> นำเข้าข้อมูลคืนค่า (Import Backup)
                         </button>
+                        
+                        <hr class="border-gray-200 dark:border-gray-700 my-4">
+                        
+                        <h4 class="text-xs font-bold text-gray-500 font-thai mb-2">ล้างข้อมูลเฉพาะส่วน (Selective Cleanup)</h4>
+                        <div class="grid grid-cols-2 gap-2 mb-4">
+                            <button onclick="if(confirm('ลบรายการ To-Do ที่ทำเสร็จแล้วทั้งหมด?')) { state.todos = state.todos.filter(t => !t.completed); localStorage.setItem('todoData', JSON.stringify(state.todos)); alert('ลบแล้ว'); renderDatabaseStats(); }" class="py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-xs font-bold font-thai text-gray-700 dark:text-gray-300">
+                                <i class="fa-solid fa-broom"></i> ล้าง To-Do ที่เสร็จแล้ว
+                            </button>
+                            <button onclick="if(confirm('ลบประวัติการเงินเก่ากว่า 30 วัน?')) { const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-30); state.finance = state.finance.filter(f => new Date(f.date) >= cutoff); localStorage.setItem('financeData', JSON.stringify(state.finance)); alert('ลบแล้ว'); renderDatabaseStats(); }" class="py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-xs font-bold font-thai text-gray-700 dark:text-gray-300">
+                                <i class="fa-solid fa-broom"></i> ล้างบัญชีเก่า 30 วัน
+                            </button>
+                        </div>
 
                         <button onclick="clearAllDatabase()" class="w-full py-3 bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/40 font-bold rounded-xl transition-all font-thai text-xs flex items-center justify-center gap-2 mt-4">
                             <i class="fa-solid fa-trash-can"></i> ล้างฐานข้อมูลทั้งหมด
@@ -621,6 +735,60 @@
         </div>
     </div>
 
+    <!-- ADD CUSTOM WORD MODAL -->
+    <div id="addWordModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl scale-100 transition-transform">
+            <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-4 text-white flex justify-between items-center">
+                <h3 class="font-bold font-thai"><i class="fa-solid fa-plus-circle mr-2"></i>เพิ่มคำศัพท์ใหม่</h3>
+                <button onclick="document.getElementById('addWordModal').classList.add('hidden')" class="text-white/80 hover:text-white p-1">
+                    <i class="fa-solid fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="addWordForm" class="p-5 space-y-4" onsubmit="event.preventDefault(); saveCustomWord();">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 font-thai mb-1">คำศัพท์ (อังกฤษ) *</label>
+                    <input type="text" id="cwWord" required class="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 font-thai mb-1">คำแปล (ไทย) *</label>
+                    <input type="text" id="cwThai" required class="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 font-thai mb-1">ประเภทคำ</label>
+                        <select id="cwPos" class="w-full px-3 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="n.">Noun (n.)</option>
+                            <option value="v.">Verb (v.)</option>
+                            <option value="adj.">Adjective (adj.)</option>
+                            <option value="adv.">Adverb (adv.)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 font-thai mb-1">หมวดหมู่</label>
+                        <input type="text" id="cwCategory" placeholder="เช่น ทั่วไป, ทำงาน" class="w-full px-3 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 font-thai mb-1">ประโยคตัวอย่าง (อังกฤษ)</label>
+                    <input type="text" id="cwExample" class="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 font-thai mb-1">คำแปลประโยค (ไทย)</label>
+                    <input type="text" id="cwExampleThai" class="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+
+                <button type="submit" class="w-full py-3 mt-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl shadow-md transition-all font-thai text-sm">
+                    บันทึกคำศัพท์
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- ============================================== -->
     <!-- FIXED BOTTOM NAVIGATION DOCK                   -->
     <!-- ============================================== -->
@@ -634,17 +802,19 @@
                 <i class="fa-solid fa-graduation-cap text-lg"></i>
                 <span class="text-[10px] font-bold font-thai mt-0.5">คำศัพท์</span>
             </button>
-            <button id="tab-todo" onclick="switchTab('todo')" class="flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
+            <button id="tab-todo" onclick="switchTab('todo')" class="relative flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
                 <i class="fa-solid fa-list-check text-lg"></i>
                 <span class="text-[10px] font-bold font-thai mt-0.5">To-Do</span>
+                <span id="navTodoBadge" class="absolute top-1 right-2 w-2 h-2 bg-red-500 rounded-full hidden"></span>
             </button>
             <button id="tab-finance" onclick="switchTab('finance')" class="flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
                 <i class="fa-solid fa-wallet text-lg"></i>
                 <span class="text-[10px] font-bold font-thai mt-0.5">เงิน</span>
             </button>
-            <button id="tab-habit" onclick="switchTab('habit')" class="flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
+            <button id="tab-habit" onclick="switchTab('habit')" class="relative flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
                 <i class="fa-solid fa-bolt text-lg"></i>
                 <span class="text-[10px] font-bold font-thai mt-0.5">นิสัย</span>
+                <span id="navHabitBadge" class="absolute top-1 right-2 w-2 h-2 bg-red-500 rounded-full hidden"></span>
             </button>
         </div>
     </nav>

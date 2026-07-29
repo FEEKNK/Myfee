@@ -81,16 +81,31 @@ function renderFinance() {
     const year = window.currentFinYear;
     const month = window.currentFinMonth;
 
-    // Filter items based on selected period
+    const searchEl = document.getElementById('finSearchInput');
+    const filterCatEl = document.getElementById('finFilterCat');
+    
+    const searchTerm = searchEl ? searchEl.value.toLowerCase() : '';
+    const filterCat = filterCatEl ? filterCatEl.value : 'All';
+
+    // Filter items based on selected period, search, and category
     let filteredItems = state.finance.filter(item => {
         if (!item.date) return true;
         const d = new Date(item.date);
-        if (period === 'month') {
-            return d.getFullYear() === year && d.getMonth() === month;
-        } else if (period === 'year') {
-            return d.getFullYear() === year;
+        
+        // Period filter
+        if (period === 'month' && (d.getFullYear() !== year || d.getMonth() !== month)) return false;
+        if (period === 'year' && d.getFullYear() !== year) return false;
+        
+        // Category filter
+        if (filterCat !== 'All' && item.category !== filterCat) return false;
+        
+        // Search filter
+        if (searchTerm) {
+            const textMatch = `${item.category} ${item.note}`.toLowerCase();
+            if (!textMatch.includes(searchTerm)) return false;
         }
-        return true; // 'all'
+        
+        return true;
     });
 
     // Label text
@@ -188,9 +203,39 @@ function renderFinance() {
     }).join('');
 }
 
+function exportFinanceCSV() {
+    if (state.finance.length === 0) {
+        alert("ไม่มีข้อมูลสำหรับส่งออก");
+        return;
+    }
+    
+    // Create CSV content
+    let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // Include BOM for Thai characters in Excel
+    csvContent += "วันที่,ประเภท,หมวดหมู่,จำนวนเงิน,หมายเหตุ\n";
+    
+    state.finance.forEach(item => {
+        const d = new Date(item.date);
+        const dateStr = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+        const typeStr = item.type === 'income' ? 'รายรับ' : 'รายจ่าย';
+        // Escape quotes
+        const note = item.note ? item.note.replace(/"/g, '""') : '';
+        const row = `"${dateStr}","${typeStr}","${item.category}","${item.amount}","${note}"`;
+        csvContent += row + "\n";
+    });
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `MYFEE_Finance_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
 window.renderFinance = renderFinance;
 window.addTransaction = addTransaction;
 window.deleteTransaction = deleteTransaction;
 window.changeFinPeriod = changeFinPeriod;
 window.prevFinPeriod = prevFinPeriod;
 window.nextFinPeriod = nextFinPeriod;
+window.exportFinanceCSV = exportFinanceCSV;

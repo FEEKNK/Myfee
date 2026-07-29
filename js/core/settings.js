@@ -25,6 +25,12 @@ function applySettings() {
             els.toggleAudio.firstElementChild.classList.remove('translate-x-6');
         }
     }
+    
+    // Budget
+    const dailyInput = document.getElementById('settingDailyBudget');
+    if (dailyInput && state.settings.dailyBudget) dailyInput.value = state.settings.dailyBudget;
+    const monthlyInput = document.getElementById('settingMonthlyBudget');
+    if (monthlyInput && state.settings.monthlyBudget) monthlyInput.value = state.settings.monthlyBudget;
 }
 
 function saveSettings() {

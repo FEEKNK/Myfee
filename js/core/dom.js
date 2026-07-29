@@ -13,6 +13,7 @@ function getElements() {
         'searchInput', 'settingsBtn', 'closeSettings', 'quizModeBtn', 'closeQuiz',
         'quizSpeakBtn', 'speakBtnFront', 'speakBtnBack', 'resetProgressBtn',
         'streakCount', 'micBtnFront', 'pronunciationFeedback', 'quizInputContainer', 'quizInput', 'quizSubmitBtn',
+        'reviewBtn',
         'view-home', 'view-flashcards', 'view-settings', 'view-todo', 'tab-home', 'tab-flashcards', 'tab-settings',
         'homeCardsFlipped', 'homeStreak', 'todoList', 'todoForm', 'todoInput'
     ];

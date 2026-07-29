@@ -4,12 +4,14 @@
 function filterCards() {
     let filtered = state.allData;
 
-    if (state.activeLevel !== 'Fav') {
+    if (state.activeLevel !== 'Fav' && state.activeLevel !== 'Review') {
         filtered = filtered.filter(c => !state.learned.includes(c.id));
     }
 
     if (state.activeLevel === 'Fav') {
         filtered = filtered.filter(c => state.favorites.includes(c.id));
+    } else if (state.activeLevel === 'Review') {
+        filtered = filtered.filter(c => state.review.includes(c.id));
     } else if (state.activeLevel !== 'All') {
         filtered = filtered.filter(c => c.level === state.activeLevel);
     }
@@ -41,6 +43,8 @@ function renderCard() {
     if (!hasCards) {
         if (state.activeLevel === 'Fav') {
             els.msgText.textContent = "No starred words yet.";
+        } else if (state.activeLevel === 'Review') {
+            els.msgText.textContent = "No words need review.";
         } else if (state.learned.length === state.allData.length && state.allData.length > 0) {
             els.msgText.textContent = "Congratulations! You've learned everything.";
             if (els.resetLearnedBtn) els.resetLearnedBtn.style.display = 'block';
@@ -70,6 +74,7 @@ function renderCard() {
     
     if (els.markLearnedBtn) els.markLearnedBtn.className = `p-2 transition-colors ${state.learned.includes(data.id) ? 'text-green-500' : 'text-gray-300 hover:text-green-500'}`;
     if (els.starBtn) els.starBtn.className = `p-2 transition-colors ${state.favorites.includes(data.id) ? 'text-yellow-500' : 'text-gray-300 hover:text-yellow-500'}`;
+    if (els.reviewBtn) els.reviewBtn.className = `p-2 transition-colors ${state.review.includes(data.id) ? 'text-orange-500' : 'text-gray-300 hover:text-orange-500'}`;
     if (els.cardPos) els.cardPos.className = `inline-block mt-3 text-sm font-semibold px-3 py-1 rounded-full ${colorClass}`;
 
     updateCounters();
@@ -145,6 +150,16 @@ function toggleFavorite() {
     if (idx === -1) { state.favorites.push(currentId); } 
     else { state.favorites.splice(idx, 1); if (state.activeLevel === 'Fav') filterCards(); }
     localStorage.setItem('favCards', JSON.stringify(state.favorites));
+    renderCard();
+}
+
+function toggleReview() {
+    if (state.cards.length === 0) return;
+    const currentId = state.cards[state.index].id;
+    const idx = state.review.indexOf(currentId);
+    if (idx === -1) { state.review.push(currentId); } 
+    else { state.review.splice(idx, 1); if (state.activeLevel === 'Review') filterCards(); }
+    localStorage.setItem('reviewCards', JSON.stringify(state.review));
     renderCard();
 }
 
@@ -227,3 +242,53 @@ function renderCategories() {
         if(isActive) b.scrollIntoView({block: 'nearest', inline: 'center'});
     });
 }
+
+function saveCustomWord(e) {
+    if (e) e.preventDefault();
+    const wordInput = document.getElementById('cwWord');
+    const thaiInput = document.getElementById('cwThai');
+    const posInput = document.getElementById('cwPos');
+    const catInput = document.getElementById('cwCategory');
+    const exInput = document.getElementById('cwExample');
+    const exThaiInput = document.getElementById('cwExampleThai');
+
+    if (!wordInput || !thaiInput) return;
+
+    const newWord = {
+        id: `custom_${Date.now()}`,
+        word: wordInput.value.trim(),
+        ipa: `/${wordInput.value.trim().toLowerCase()}/`,
+        pos: posInput ? posInput.value : 'n.',
+        level: 'Custom',
+        thai: thaiInput.value.trim(),
+        example: exInput && exInput.value ? exInput.value.trim() : '-',
+        example_meaning: exThaiInput && exThaiInput.value ? exThaiInput.value.trim() : '-',
+        category: catInput && catInput.value ? catInput.value.trim() : 'ทั่วไป'
+    };
+
+    // Add to state and save
+    if (!state.customCards) state.customCards = [];
+    state.customCards.push(newWord);
+    localStorage.setItem('customCards', JSON.stringify(state.customCards));
+
+    // Update allData
+    state.allData.push(newWord);
+
+    // Clear form and hide modal
+    document.getElementById('addWordForm').reset();
+    document.getElementById('addWordModal').classList.add('hidden');
+
+    // Re-render categories and cards
+    renderCategories();
+    filterCards();
+    
+    // Optional feedback
+    if (els.pronunciationFeedback) {
+        els.pronunciationFeedback.textContent = "บันทึกคำศัพท์แล้ว!";
+        els.pronunciationFeedback.className = "absolute top-20 left-1/2 transform -translate-x-1/2 text-sm font-bold opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap bg-green-100 text-green-700 px-3 py-1 rounded-full shadow-md z-50";
+        setTimeout(() => els.pronunciationFeedback.classList.add('opacity-0'), 2000);
+    }
+}
+
+window.saveCustomWord = saveCustomWord;
+window.toggleReview = toggleReview;

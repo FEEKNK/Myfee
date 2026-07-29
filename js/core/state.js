@@ -8,12 +8,18 @@ let state = {
     activeCat: 'All',
     activeLevel: 'All',
     isShuffled: false,
-    // LocalStorage Data
+    // Flashcard state
     learned: JSON.parse(localStorage.getItem('learnedCards')) || [],
     favorites: JSON.parse(localStorage.getItem('favCards')) || [],
+    review: JSON.parse(localStorage.getItem('reviewCards')) || [],
+    customCards: JSON.parse(localStorage.getItem('customCards')) || [],
+    
     settings: JSON.parse(localStorage.getItem('appSettings')) || {
         darkMode: false,
         autoPlay: false,
+        dailyBudget: 0,
+        monthlyBudget: 0,
+        lastBackupDate: null
     },
     // Quiz State
     quizScore: 0,
@@ -26,9 +32,14 @@ let state = {
     finance: JSON.parse(localStorage.getItem('financeData')) || [],
     // Habit State
     habits: JSON.parse(localStorage.getItem('habitData')) || [
-        { id: 1, name: 'อ่านหนังสือ 15 นาที', icon: 'fa-book', streak: 0, lastCompleted: null },
-        { id: 2, name: 'ออกกำลังกาย 20 นาที', icon: 'fa-person-running', streak: 0, lastCompleted: null },
-        { id: 3, name: 'นั่งสมาธิ 5 นาที', icon: 'fa-brain', streak: 0, lastCompleted: null }
+        { id: 1, name: 'อ่านหนังสือ 15 นาที', icon: 'fa-book', streak: 0, lastCompleted: null, routine: 'morning', history: [] },
+        { id: 2, name: 'ออกกำลังกาย 20 นาที', icon: 'fa-person-running', streak: 0, lastCompleted: null, routine: 'afternoon', history: [] },
+        { id: 3, name: 'นั่งสมาธิ 5 นาที', icon: 'fa-brain', streak: 0, lastCompleted: null, routine: 'evening', history: [] }
     ]
 };
+
+// Combine allData with customCards immediately
+if (state.customCards.length > 0) {
+    state.allData = [...state.allData, ...state.customCards];
+}
 

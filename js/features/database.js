@@ -15,9 +15,15 @@ function exportDatabase() {
                 todoData: JSON.parse(localStorage.getItem('todoData')) || [],
                 financeData: JSON.parse(localStorage.getItem('financeData')) || [],
                 waterData: JSON.parse(localStorage.getItem('waterData')) || {},
-                habitData: JSON.parse(localStorage.getItem('habitData')) || []
+                habitData: JSON.parse(localStorage.getItem('habitData')) || [],
+                customCards: JSON.parse(localStorage.getItem('customCards')) || [],
+                reviewCards: JSON.parse(localStorage.getItem('reviewCards')) || []
             }
         };
+
+        state.settings.lastBackupDate = backupData.exportedAt;
+        localStorage.setItem('appSettings', JSON.stringify(state.settings));
+        if(typeof renderDatabaseStats === 'function') renderDatabaseStats();
 
         const jsonString = JSON.stringify(backupData, null, 2);
         const blob = new Blob([jsonString], { type: 'application/json' });
@@ -125,7 +131,21 @@ function renderDatabaseStats() {
     const financeCount = (JSON.parse(localStorage.getItem('financeData')) || []).length;
     const habitsCount = (JSON.parse(localStorage.getItem('habitData')) || []).length;
 
+    let backupWarning = '';
+    const lastBackup = state.settings.lastBackupDate;
+    if (lastBackup) {
+        const daysSinceBackup = Math.floor((new Date() - new Date(lastBackup)) / (1000 * 60 * 60 * 24));
+        if (daysSinceBackup >= 14) {
+            backupWarning = `<div class="bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-3 rounded-xl mb-3 text-xs font-bold font-thai border border-red-200 dark:border-red-800 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-lg"></i> ไม่ได้สำรองข้อมูลมา ${daysSinceBackup} วันแล้ว! แนะนำให้กดสำรองข้อมูลด่วน</div>`;
+        } else {
+            backupWarning = `<div class="bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 p-3 rounded-xl mb-3 text-xs font-bold font-thai border border-green-200 dark:border-green-800 flex items-center gap-2"><i class="fa-solid fa-check-circle text-lg"></i> สำรองข้อมูลล่าสุดเมื่อ: ${new Date(lastBackup).toLocaleDateString('th-TH')}</div>`;
+        }
+    } else {
+        backupWarning = `<div class="bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 p-3 rounded-xl mb-3 text-xs font-bold font-thai border border-orange-200 dark:border-orange-800 flex items-center gap-2"><i class="fa-solid fa-circle-exclamation text-lg"></i> ยังไม่เคยสำรองข้อมูลเลย! กรุณาสำรองข้อมูลเพื่อป้องกันข้อมูลสูญหาย</div>`;
+    }
+
     statsContainer.innerHTML = `
+        ${backupWarning}
         <div class="grid grid-cols-2 gap-3 text-center font-thai">
             <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-xl border border-gray-100 dark:border-gray-700">
                 <span class="text-[10px] text-gray-400 font-bold uppercase">ขนาดฐานข้อมูล</span>
