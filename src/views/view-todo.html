@@ -1,0 +1,77 @@
+<div id="view-todo" class="flex-1 flex flex-col p-0 hidden w-full h-full pb-20">
+        <header class="bg-white dark:bg-gray-800 shadow-sm p-4 z-20 transition-colors duration-300">
+            <div class="max-w-md mx-auto flex flex-col gap-3">
+                <div class="flex justify-between items-center">
+                    <button onclick="switchTab('home')" class="text-gray-400 hover:text-green-500 transition-colors p-2">
+                        <i class="fa-solid fa-arrow-left text-2xl"></i>
+                    </button>
+                    <h2 class="text-2xl font-bold dark:text-white font-thai">สิ่งที่ต้องทำ (To-Do)</h2>
+                    <div class="w-10"></div>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="flex gap-2 bg-gray-100 dark:bg-gray-700 p-1 rounded-xl font-thai text-xs">
+                    <button onclick="window.currentTodoFilter='today'; this.parentElement.querySelectorAll('button').forEach(b=>b.className='flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400'); this.className='flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-green-600 dark:text-green-400 shadow-sm'; renderTodos();" class="flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-green-600 dark:text-green-400 shadow-sm">
+                        📅 วันนี้
+                    </button>
+                    <button onclick="window.currentTodoFilter='all'; this.parentElement.querySelectorAll('button').forEach(b=>b.className='flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400'); this.className='flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-green-600 dark:text-green-400 shadow-sm'; renderTodos();" class="flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400">
+                        📋 ทั้งหมด
+                    </button>
+                    <button onclick="window.currentTodoFilter='archive'; this.parentElement.querySelectorAll('button').forEach(b=>b.className='flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400'); this.className='flex-1 py-1.5 rounded-lg bg-white dark:bg-gray-800 font-bold text-green-600 dark:text-green-400 shadow-sm'; renderTodos();" class="flex-1 py-1.5 rounded-lg text-gray-500 dark:text-gray-400">
+                        📜 ประวัติ
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 w-full max-w-md mx-auto">
+            <div id="todoList" class="flex flex-col gap-3"></div>
+        </main>
+
+        <footer class="p-4 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 w-full z-10 transition-colors duration-300">
+            <div class="max-w-md mx-auto">
+                <form id="todoForm" onsubmit="event.preventDefault(); addTodoFromForm();" class="flex flex-col gap-2.5">
+                    <div class="flex gap-2">
+                        <input type="text" id="todoInput" placeholder="เพิ่มงานใหม่..." class="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-xl focus:ring-2 focus:ring-green-500 focus:outline-none transition-all placeholder-gray-400 font-thai" autocomplete="off" required>
+                        <button type="submit" class="w-12 h-12 bg-green-500 text-white rounded-xl shadow-lg hover:bg-green-600 transition-all active:scale-95 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-plus text-xl"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <select id="todoPriority" class="flex-1 px-3 py-2 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-xl text-xs font-thai font-bold focus:outline-none focus:ring-2 focus:ring-green-500 text-center">
+                            <option value="high">🔴 สำคัญมาก</option>
+                            <option value="med" selected>🟡 ทั่วไป</option>
+                            <option value="low">🔵 ว่างค่อยทำ</option>
+                        </select>
+                        <select id="todoCategory" class="flex-1 px-3 py-2 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-xl text-xs font-thai font-bold focus:outline-none focus:ring-2 focus:ring-green-500 text-center">
+                            <option value="general">📝 ทั่วไป</option>
+                            <option value="work">🏢 งาน/เรียน</option>
+                            <option value="home">🏠 บ้าน</option>
+                            <option value="personal">💪 ส่วนตัว</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-gray-400 dark:text-gray-500 font-thai shrink-0">การวนซ้ำ:</span>
+                        <select id="todoRepeatType" onchange="document.getElementById('todoDaysContainer').classList.toggle('hidden', this.value !== 'days');" class="flex-1 px-3 py-2 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-xl text-xs font-thai font-bold focus:outline-none">
+                            <option value="none">📌 ทำครั้งเดียว (Today Only)</option>
+                            <option value="daily">🔄 ทุกวันตลอดไป (Everyday)</option>
+                            <option value="days">📅 ระบุวันในสัปดาห์ (Specific Days)</option>
+                        </select>
+                    </div>
+
+                    <!-- Day of week selector buttons -->
+                    <div id="todoDaysContainer" class="hidden flex gap-1.5 justify-between pt-1 font-thai">
+                        <button type="button" data-day="1" onclick="this.classList.toggle('selected'); this.classList.toggle('bg-green-500'); this.classList.toggle('text-white'); this.classList.toggle('bg-gray-100'); this.classList.toggle('dark:bg-gray-700');" class="todo-day-btn flex-1 py-1.5 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">จ</button>
+                        <button type="button" data-day="2" onclick="this.classList.toggle('selected'); this.classList.toggle('bg-green-500'); this.classList.toggle('text-white'); this.classList.toggle('bg-gray-100'); this.classList.toggle('dark:bg-gray-700');" class="todo-day-btn flex-1 py-1.5 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">อ</button>
+                        <button type="button" data-day="3" onclick="this.classList.toggle('selected'); this.classList.toggle('bg-green-500'); this.classList.toggle('text-white'); this.classList.toggle('bg-gray-100'); this.classList.toggle('dark:bg-gray-700');" class="todo-day-btn flex-1 py-1.5 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">พ</button>
+                        <button type="button" data-day="4" onclick="this.classList.toggle('selected'); this.classList.toggle('bg-green-500'); this.classList.toggle('text-white'); this.classList.toggle('bg-gray-100'); this.classList.toggle('dark:bg-gray-700');" class="todo-day-btn flex-1 py-1.5 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">พฤ</button>
+                        <button type="button" data-day="5" onclick="this.classList.toggle('selected'); this.classList.toggle('bg-green-500'); this.classList.toggle('text-white'); this.classList.toggle('bg-gray-100'); this.classList.toggle('dark:bg-gray-700');" class="todo-day-btn flex-1 py-1.5 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">ศ</button>
+                        <button type="button" data-day="6" onclick="this.classList.toggle('selected'); this.classList.toggle('bg-green-500'); this.classList.toggle('text-white'); this.classList.toggle('bg-gray-100'); this.classList.toggle('dark:bg-gray-700');" class="todo-day-btn flex-1 py-1.5 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">ส</button>
+                        <button type="button" data-day="0" onclick="this.classList.toggle('selected'); this.classList.toggle('bg-green-500'); this.classList.toggle('text-white'); this.classList.toggle('bg-gray-100'); this.classList.toggle('dark:bg-gray-700');" class="todo-day-btn flex-1 py-1.5 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">อา</button>
+                    </div>
+                </form>
+            </div>
+        </footer>
+    </div>

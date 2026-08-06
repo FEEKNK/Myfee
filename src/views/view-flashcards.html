@@ -1,0 +1,162 @@
+<div id="view-flashcards" class="flex-1 flex flex-col hidden h-full w-full overflow-hidden pb-16">
+        <header class="bg-white dark:bg-gray-800 shadow-sm p-3 z-20 sticky top-0 transition-colors duration-300">
+            <div class="max-w-md mx-auto flex flex-col gap-2">
+                <div class="flex items-center gap-2">
+                    <button onclick="switchTab('home')" class="p-1.5 text-gray-400 hover:text-blue-600 transition-colors" title="Back to Home">
+                        <i class="fa-solid fa-arrow-left text-lg"></i>
+                    </button>
+                    
+                    <div class="flex-1 relative">
+                        <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs"></i>
+                        <input type="text" id="searchInput" placeholder="Search..." autocomplete="off"
+                            class="w-full pl-9 pr-3 py-1.5 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-full focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all placeholder-gray-400 text-xs">
+                    </div>
+
+                    <div class="flex items-center text-orange-500 font-bold text-xs px-1" title="Daily Streak">
+                        <i class="fa-solid fa-fire mr-1"></i> <span id="streakCount">0</span>
+                    </div>
+
+                    <button onclick="document.getElementById('addWordModal').classList.remove('hidden')" class="p-1.5 text-gray-400 hover:text-green-500 transition-colors" title="Add Custom Word">
+                        <i class="fa-solid fa-plus-circle text-lg"></i>
+                    </button>
+
+                    <button onclick="switchTab('settings')" class="p-1.5 text-gray-400 hover:text-blue-600 transition-colors" title="Settings">
+                        <i class="fa-solid fa-gear text-lg"></i>
+                    </button>
+                </div>
+
+                <div class="flex flex-col gap-1 px-1">
+                    <div class="flex justify-between items-center text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500 font-bold">
+                        <span>Card: <span id="currentIndex" class="text-blue-600 dark:text-blue-400">0</span> / <span id="totalCards">0</span></span>
+                        <span>Learned: <span id="learnedCount" class="text-green-600">0</span> (<span id="progressPercent">0</span>%)</span>
+                    </div>
+                    <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div id="progressBar" class="h-full bg-green-500 transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="flex gap-1.5 overflow-x-auto pb-0.5 no-scrollbar text-xs" id="levelFilterBar">
+                    <button data-level="All" class="lvl-btn active">All Levels</button>
+                    <button data-level="A1" class="lvl-btn">A1</button>
+                    <button data-level="A2" class="lvl-btn">A2</button>
+                    <button data-level="B1" class="lvl-btn">B1</button>
+                    <button data-level="B2" class="lvl-btn">B2</button>
+                    <button data-level="Fav" class="lvl-btn text-yellow-600 dark:text-yellow-400"><i class="fa-solid fa-star mr-1"></i> Stars</button>
+                    <button data-level="Review" class="lvl-btn text-orange-600 dark:text-orange-400"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Review</button>
+                </div>
+
+                <div class="flex gap-1.5 overflow-x-auto pb-0.5 no-scrollbar text-xs" id="categoryList">
+                    <!-- JS populates buttons -->
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 flex flex-col justify-between items-center p-3 relative w-full max-w-md mx-auto touch-manipulation min-h-0">
+            <div id="msgContainer" class="hidden absolute flex-col items-center justify-center text-center z-0 inset-0">
+                <i id="msgIcon" class="fa-solid fa-check-circle text-5xl text-green-500 mb-3"></i>
+                <p id="msgText" class="text-gray-500 dark:text-gray-400 text-lg font-thai">All words learned!</p>
+                <button id="resetLearnedBtn" class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-full text-sm shadow-lg hover:bg-blue-700 transition-all">
+                    Reset Progress
+                </button>
+            </div>
+
+            <!-- Card Container with Side Floating Arrows -->
+            <div class="relative w-full flex items-center justify-center my-auto">
+                
+                <!-- Left Floating Side Button -->
+                <button onclick="if(typeof prevCard==='function') prevCard();" class="absolute -left-2 z-20 w-10 h-10 rounded-full bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-200 shadow-lg border border-gray-100 dark:border-gray-700 flex items-center justify-center active:scale-90 transition-transform hover:bg-blue-50 dark:hover:bg-gray-700" title="คำก่อนหน้า">
+                    <i class="fa-solid fa-chevron-left text-base"></i>
+                </button>
+
+                <!-- Flashcard -->
+                <div class="w-full aspect-[4/4.8] max-h-[42vh] perspective-1000 cursor-pointer group z-10 mx-6" id="cardContainer">
+                    <div class="flashcard-inner bg-white dark:bg-gray-800 relative w-full h-full shadow-xl rounded-3xl transition-all duration-500 transform-style-3d" id="cardInner">
+                        <!-- Front -->
+                        <div class="absolute inset-0 w-full h-full backface-hidden flex flex-col justify-between p-5 rounded-3xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+                            <div class="flex justify-between items-start">
+                                <span id="cardLevel" class="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase">--</span>
+                                <div class="flex gap-0.5">
+                                    <button id="starBtn" class="text-gray-300 hover:text-yellow-500 transition-colors p-1.5" title="Add to Favorites">
+                                        <i class="fa-solid fa-star text-lg"></i>
+                                    </button>
+                                    <button id="reviewBtn" class="text-gray-300 hover:text-orange-500 transition-colors p-1.5" title="Needs Review">
+                                        <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+                                    </button>
+                                    <button id="markLearnedBtn" class="text-gray-300 hover:text-green-500 transition-colors p-1.5" title="Mark as Learned">
+                                        <i class="fa-regular fa-circle-check text-lg"></i>
+                                    </button>
+                                    <button id="speakBtnFront" class="text-gray-400 hover:text-blue-500 transition-colors p-1.5 active:scale-95">
+                                        <i class="fa-solid fa-volume-high text-lg"></i>
+                                    </button>
+                                    <button id="micBtnFront" class="text-gray-400 hover:text-red-500 transition-colors p-1.5 active:scale-95" title="Practice Pronunciation">
+                                        <i class="fa-solid fa-microphone text-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="text-center my-auto relative">
+                                <h1 id="cardWord" class="text-4xl font-bold text-gray-800 dark:text-white mb-1 tracking-tight break-words leading-tight">Word</h1>
+                                <p id="pronunciationFeedback" class="absolute -top-7 left-1/2 transform -translate-x-1/2 text-xs font-bold opacity-0 transition-opacity duration-300 pointer-events-none whitespace-nowrap bg-white/90 dark:bg-gray-800/90 px-2.5 py-0.5 rounded-full shadow-md"></p>
+                                <p id="cardIpa" class="text-base text-gray-400 font-mono">/ipa/</p>
+                                <span id="cardPos" class="inline-block mt-2 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">pos</span>
+                            </div>
+
+                            <div class="text-center text-gray-300 text-[10px] animate-pulse font-bold tracking-widest uppercase">
+                                Tap to flip <i class="fa-solid fa-arrow-rotate-right ml-1"></i>
+                            </div>
+                        </div>
+
+                        <!-- Back -->
+                        <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 flex flex-col justify-between p-5 rounded-3xl bg-slate-50 dark:bg-gray-800 border border-slate-200 dark:border-gray-700">
+                            <div>
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="w-1.5 h-6 bg-blue-500 rounded-full"></span>
+                                    <h2 class="text-base font-bold text-gray-700 dark:text-gray-200 font-thai">ความหมาย</h2>
+                                </div>
+                                
+                                <p id="cardThai" class="text-2xl text-gray-800 dark:text-white font-thai mb-3 leading-snug">คำแปล</p>
+                                
+                                <div class="bg-white dark:bg-gray-700 p-3 rounded-xl shadow-sm border border-gray-100 dark:border-gray-600">
+                                    <p class="text-[9px] text-gray-400 uppercase font-black mb-1 tracking-widest">Example</p>
+                                    <p id="cardExample" class="text-sm text-gray-700 dark:text-gray-200 italic mb-1 leading-snug">"..."</p>
+                                    <p id="cardExampleMeaning" class="text-xs text-gray-500 dark:text-gray-400 font-thai">"..."</p>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-center mt-2">
+                                 <button id="speakBtnBack" class="flex items-center gap-1.5 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 px-4 py-1.5 rounded-full hover:bg-blue-200 transition-colors shadow-sm font-bold text-xs">
+                                    <i class="fa-solid fa-volume-high"></i> Listen again
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Floating Side Button -->
+                <button onclick="if(typeof nextCard==='function') nextCard();" class="absolute -right-2 z-20 w-10 h-10 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center active:scale-90 transition-transform hover:bg-blue-700" title="คำถัดไป">
+                    <i class="fa-solid fa-chevron-right text-base"></i>
+                </button>
+            </div>
+
+            <!-- Bottom Navigation Bar (Built-in, fit 100% on screen) -->
+            <div class="w-full bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-2.5 rounded-2xl shadow-sm z-10 transition-colors duration-300 mt-auto">
+                <div class="flex justify-between items-center gap-2">
+                    <button id="prevBtn" class="px-3 py-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold hover:bg-gray-200 flex items-center justify-center gap-1 transition-all active:scale-95 text-xs font-thai">
+                        <i class="fa-solid fa-arrow-left"></i> ย้อนกลับ
+                    </button>
+                    
+                    <button id="shuffleBtn" class="w-9 h-9 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-400 hover:text-orange-500 flex items-center justify-center transition-all active:scale-90" title="Shuffle Cards">
+                        <i class="fa-solid fa-shuffle text-xs"></i>
+                    </button>
+
+                    <button id="quizModeBtn" class="flex-1 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl shadow-md flex items-center justify-center gap-1.5 font-bold text-xs hover:opacity-90 transition-all active:scale-95 font-thai">
+                        <i class="fa-solid fa-graduation-cap"></i> Quiz
+                    </button>
+                    
+                    <button id="nextBtn" class="px-4 py-2 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-md flex items-center justify-center gap-1 transition-all active:scale-95 text-xs font-thai">
+                        ถัดไป <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>

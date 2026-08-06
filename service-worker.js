@@ -10,8 +10,9 @@ const ASSETS_TO_CACHE = [
   './index.html',
   './logo.png',
   './style.css',
-  './data.js',
+  './data/vocabulary.js',
   './manifest.json',
+  './js/core/database.js',
   // External CDNs (Tailwind, FontAwesome, Fonts)
 
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',

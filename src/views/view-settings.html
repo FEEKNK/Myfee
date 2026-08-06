@@ -1,0 +1,94 @@
+<div id="view-settings" class="flex-1 flex flex-col p-6 hidden max-w-md mx-auto w-full pt-12 pb-24 overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+            <button onclick="switchTab('home')" class="text-gray-400 hover:text-blue-500 transition-colors p-2">
+                <i class="fa-solid fa-arrow-left text-2xl"></i>
+            </button>
+            <div class="flex items-center gap-2">
+                <img src="logo.png" alt="MY FEE Logo" class="w-8 h-8 rounded-full object-cover border border-blue-500 p-0.5">
+                <h2 class="text-2xl font-bold dark:text-white text-center">Settings</h2>
+            </div>
+            <div class="w-10"></div>
+        </div>
+
+        <div class="space-y-6">
+            <!-- App Options -->
+            <div class="space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 font-thai">การตั้งค่าแอปพลิเคชัน</h3>
+                
+                <div class="flex justify-between items-center cursor-pointer p-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl transition-colors shadow-sm border border-gray-100 dark:border-gray-700">
+                    <span class="dark:text-gray-200 font-semibold flex items-center text-sm"><i class="fa-solid fa-moon text-lg mr-3 text-blue-500"></i> Dark Mode</span>
+                    <button id="toggleDark" class="w-12 h-6 bg-gray-200 dark:bg-blue-600 rounded-full relative transition-colors">
+                        <span class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform dark:translate-x-6 shadow-sm"></span>
+                    </button>
+                </div>
+
+                <div class="flex justify-between items-center cursor-pointer p-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-2xl transition-colors shadow-sm border border-gray-100 dark:border-gray-700">
+                    <span class="dark:text-gray-200 font-semibold flex items-center text-sm"><i class="fa-solid fa-volume-high text-lg mr-3 text-green-500"></i> Auto-play Audio</span>
+                    <button id="toggleAudio" class="w-12 h-6 bg-gray-200 rounded-full relative transition-colors">
+                        <span class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform shadow-sm"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Budget Settings -->
+            <div class="space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 font-thai flex items-center gap-1.5">
+                    <i class="fa-solid fa-wallet text-rose-500"></i> ตั้งค่างบประมาณ (Budget)
+                </h3>
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-semibold dark:text-gray-200 font-thai">งบรายวันสูงสุด (บาท)</span>
+                        <input type="number" id="settingDailyBudget" onchange="state.settings.dailyBudget=Number(this.value); saveSettings(); if(typeof updateDashboard==='function') updateDashboard();" class="w-24 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-lg text-sm text-center font-bold focus:ring-2 focus:ring-rose-500" placeholder="ไม่มี">
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-semibold dark:text-gray-200 font-thai">งบรายเดือนสูงสุด (บาท)</span>
+                        <input type="number" id="settingMonthlyBudget" onchange="state.settings.monthlyBudget=Number(this.value); saveSettings(); if(typeof updateDashboard==='function') updateDashboard();" class="w-24 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-lg text-sm text-center font-bold focus:ring-2 focus:ring-rose-500" placeholder="ไม่มี">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Local Database Management Card -->
+            <div class="space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 font-thai flex items-center gap-1.5">
+                    <i class="fa-solid fa-database text-blue-500"></i> จัดการฐานข้อมูลส่วนตัว (Offline 100%)
+                </h3>
+                
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-4">
+                    <!-- DB Stats Container -->
+                    <div id="dbStatsContainer"></div>
+
+                    <!-- DB Actions -->
+                    <div class="space-y-2 pt-2">
+                        <button onclick="exportDatabase()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition-all font-thai text-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i> สำรองและดาวน์โหลดข้อมูล (.json)
+                        </button>
+
+                        <input type="file" id="importFileInput" accept=".json" onchange="importDatabase(event)" class="hidden">
+                        <button onclick="document.getElementById('importFileInput').click()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all font-thai text-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-file-import"></i> นำเข้าข้อมูลคืนค่า (Import Backup)
+                        </button>
+                        
+                        <hr class="border-gray-200 dark:border-gray-700 my-4">
+                        
+                        <h4 class="text-xs font-bold text-gray-500 font-thai mb-2">ล้างข้อมูลเฉพาะส่วน (Selective Cleanup)</h4>
+                        <div class="grid grid-cols-2 gap-2 mb-4">
+                            <button onclick="if(confirm('ลบรายการ To-Do ที่ทำเสร็จแล้วทั้งหมด?')) { state.todos = state.todos.filter(t => !t.completed); localStorage.setItem('todoData', JSON.stringify(state.todos)); alert('ลบแล้ว'); renderDatabaseStats(); }" class="py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-xs font-bold font-thai text-gray-700 dark:text-gray-300">
+                                <i class="fa-solid fa-broom"></i> ล้าง To-Do ที่เสร็จแล้ว
+                            </button>
+                            <button onclick="if(confirm('ลบประวัติการเงินเก่ากว่า 30 วัน?')) { const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-30); state.finance = state.finance.filter(f => new Date(f.date) >= cutoff); localStorage.setItem('financeData', JSON.stringify(state.finance)); alert('ลบแล้ว'); renderDatabaseStats(); }" class="py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-xs font-bold font-thai text-gray-700 dark:text-gray-300">
+                                <i class="fa-solid fa-broom"></i> ล้างบัญชีเก่า 30 วัน
+                            </button>
+                        </div>
+
+                        <button onclick="clearAllDatabase()" class="w-full py-3 bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/40 font-bold rounded-xl transition-all font-thai text-xs flex items-center justify-center gap-2 mt-4">
+                            <i class="fa-solid fa-trash-can"></i> ล้างฐานข้อมูลทั้งหมด
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button id="resetProgressBtn" class="w-full py-4 text-gray-400 font-bold bg-gray-100 dark:bg-gray-800 hover:text-red-500 rounded-2xl transition-colors text-xs font-thai">
+                <i class="fa-solid fa-rotate-left mr-1"></i> Reset Learned Words Only
+            </button>
+        </div>
+    </div>

@@ -1,0 +1,34 @@
+<div id="view-habit" class="flex-1 flex flex-col hidden w-full h-full pb-20">
+        <header class="bg-white dark:bg-gray-800 shadow-sm p-4 z-20">
+            <div class="max-w-md mx-auto flex justify-between items-center">
+                <button onclick="switchTab('home')" class="text-gray-400 hover:text-amber-500 transition-colors p-2">
+                    <i class="fa-solid fa-arrow-left text-2xl"></i>
+                </button>
+                <h2 class="text-xl font-bold dark:text-white font-thai">ติดตามนิสัย (Habit Tracker)</h2>
+                <div class="w-10"></div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 max-w-md mx-auto w-full space-y-4">
+            <!-- Add Habit Form -->
+            <form id="habitForm" onsubmit="event.preventDefault(); const inp = document.getElementById('habitInput'); const rType = document.getElementById('habitRoutineType').value; addHabit(inp.value, rType); inp.value='';" class="flex flex-col gap-2 bg-white dark:bg-gray-800 p-3 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <input type="text" id="habitInput" placeholder="เพิ่มนิสัยใหม่ที่ต้องการทำ..." required class="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none">
+                <div class="flex gap-2">
+                    <select id="habitRoutineType" class="flex-1 px-3 py-2 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-xl text-xs font-thai font-bold focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        <option value="morning">🌅 กิจวัตรยามเช้า (Morning)</option>
+                        <option value="afternoon">☀️ ระหว่างวัน (Afternoon)</option>
+                        <option value="evening">🌙 ก่อนนอน (Evening)</option>
+                    </select>
+                    <button type="submit" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-sm text-sm font-thai shrink-0">
+                        + เพิ่ม
+                    </button>
+                </div>
+            </form>
+
+            <!-- Habit List -->
+            <div class="space-y-2">
+                <h3 class="font-bold text-xs uppercase tracking-wider text-gray-400 font-thai">นิสัยทั้งหมด</h3>
+                <div id="habitList" class="space-y-2"></div>
+            </div>
+        </main>
+    </div>

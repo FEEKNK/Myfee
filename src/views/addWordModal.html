@@ -1,0 +1,52 @@
+<div id="addWordModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl scale-100 transition-transform">
+            <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-4 text-white flex justify-between items-center">
+                <h3 class="font-bold font-thai"><i class="fa-solid fa-plus-circle mr-2"></i>เพิ่มคำศัพท์ใหม่</h3>
+                <button onclick="document.getElementById('addWordModal').classList.add('hidden')" class="text-white/80 hover:text-white p-1">
+                    <i class="fa-solid fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="addWordForm" class="p-5 space-y-4" onsubmit="event.preventDefault(); saveCustomWord();">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 font-thai mb-1">คำศัพท์ (อังกฤษ) *</label>
+                    <input type="text" id="cwWord" required class="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 font-thai mb-1">คำแปล (ไทย) *</label>
+                    <input type="text" id="cwThai" required class="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 font-thai mb-1">ประเภทคำ</label>
+                        <select id="cwPos" class="w-full px-3 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="n.">Noun (n.)</option>
+                            <option value="v.">Verb (v.)</option>
+                            <option value="adj.">Adjective (adj.)</option>
+                            <option value="adv.">Adverb (adv.)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 font-thai mb-1">หมวดหมู่</label>
+                        <input type="text" id="cwCategory" placeholder="เช่น ทั่วไป, ทำงาน" class="w-full px-3 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 font-thai mb-1">ประโยคตัวอย่าง (อังกฤษ)</label>
+                    <input type="text" id="cwExample" class="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 font-thai mb-1">คำแปลประโยค (ไทย)</label>
+                    <input type="text" id="cwExampleThai" class="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+
+                <button type="submit" class="w-full py-3 mt-2 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl shadow-md transition-all font-thai text-sm">
+                    บันทึกคำศัพท์
+                </button>
+            </form>
+        </div>
+    </div>

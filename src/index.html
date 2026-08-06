@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MY FEE</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="theme-color" content="#2563eb">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="h-screen flex flex-col overflow-hidden bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 select-none font-sans transition-colors duration-300">
+
+    <!-- ============================================== -->
+    <!-- 0. LIFE DASHBOARD & HOME VIEW                  -->
+    <!-- ============================================== -->
+    <include src="views/view-home.html"></include>
+         <include src="views/view-flashcards.html"></include>
+
+    <!-- ============================================== -->
+    <!-- 2. TO-DO VIEW                                  -->
+    <!-- ============================================== -->
+        <include src="views/view-todo.html"></include>
+
+    <!-- ============================================== -->
+    <!-- 3. FINANCE & EXPENSE TRACKER VIEW              -->
+    <!-- ============================================== -->
+        <include src="views/view-finance.html"></include>
+
+
+
+    <!-- ============================================== -->
+    <!-- 5. HABIT TRACKER VIEW                          -->
+    <!-- ============================================== -->
+        <include src="views/view-habit.html"></include>
+
+    <!-- ============================================== -->
+    <!-- 6. SETTINGS & DATABASE VIEW                    -->
+    <!-- ============================================== -->
+        <include src="views/view-settings.html"></include>
+
+    <!-- ============================================== -->
+    <!-- 7. Quiz Modal                                  -->
+    <!-- ============================================== -->
+        <include src="views/quizModal.html"></include>
+
+    <!-- ADD CUSTOM WORD MODAL -->
+        <include src="views/addWordModal.html"></include>
+
+    <!-- ============================================== -->
+    <!-- NEW FEATURES (ROADMAP)                         -->
+    <!-- ============================================== -->
+        <include src="views/view-projects.html"></include>
+        <include src="views/view-notes.html"></include>
+        <include src="views/view-pomodoro.html"></include>
+        <include src="views/view-countdown.html"></include>
+        <include src="views/view-goals.html"></include>
+        <include src="views/view-breathing.html"></include>
+
+    <!-- ============================================== -->
+    <!-- FIXED BOTTOM NAVIGATION DOCK                   -->
+    <!-- ============================================== -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-t border-gray-200/50 dark:border-gray-700/50 max-w-md mx-auto px-2 py-1">
+        <div class="flex justify-around items-center">
+            <button id="tab-home" onclick="switchTab('home')" class="flex flex-col items-center justify-center p-2 rounded-xl text-blue-600 dark:text-blue-400 transition-colors">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="text-[10px] font-bold font-thai mt-0.5">หน้าแรก</span>
+            </button>
+            <button id="tab-flashcards" onclick="switchTab('flashcards')" class="flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
+                <i class="fa-solid fa-graduation-cap text-lg"></i>
+                <span class="text-[10px] font-bold font-thai mt-0.5">คำศัพท์</span>
+            </button>
+            <button id="tab-todo" onclick="switchTab('todo')" class="relative flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
+                <i class="fa-solid fa-list-check text-lg"></i>
+                <span class="text-[10px] font-bold font-thai mt-0.5">To-Do</span>
+                <span id="navTodoBadge" class="absolute top-1 right-2 w-2 h-2 bg-red-500 rounded-full hidden"></span>
+            </button>
+            <button id="tab-finance" onclick="switchTab('finance')" class="flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
+                <i class="fa-solid fa-wallet text-lg"></i>
+                <span class="text-[10px] font-bold font-thai mt-0.5">เงิน</span>
+            </button>
+            <button id="tab-habit" onclick="switchTab('habit')" class="relative flex flex-col items-center justify-center p-2 rounded-xl text-gray-400 transition-colors">
+                <i class="fa-solid fa-bolt text-lg"></i>
+                <span class="text-[10px] font-bold font-thai mt-0.5">นิสัย</span>
+                <span id="navHabitBadge" class="absolute top-1 right-2 w-2 h-2 bg-red-500 rounded-full hidden"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============================================== -->
+    <!-- Scripts (Separated by features)                -->
+    <!-- ============================================== -->
+    <script src="./data/vocabulary.js"></script>
+    <script src="./js/core/state.js"></script>
+    <script src="./js/core/dom.js"></script>
+    <script src="./js/core/navigation.js"></script>
+    <script src="./js/core/settings.js"></script>
+    <script src="./js/features/finance.js"></script>
+    <script src="./js/features/habit.js"></script>
+    <script src="./js/features/dashboard.js"></script>
+    <script src="./js/todo/todo.js"></script>
+    <script src="./js/flashcards/quiz.js"></script>
+    <script src="./js/flashcards/flashcards.js"></script>
+    <script src="./js/core/database.js"></script>
+    <script src="./js/features/projects.js"></script>
+    <script src="./js/features/notes.js"></script>
+    <script src="./js/features/pomodoro.js"></script>
+    <script src="./js/features/countdown.js"></script>
+    <script src="./js/features/goals.js"></script>
+    <script src="./js/features/breathing.js"></script>
+    <script src="./js/main.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js').catch(err => console.log('SW fail', err));
+            });
+        }
+    </script>
+</body>
+</html>
