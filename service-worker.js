@@ -2,7 +2,7 @@
 // คำอธิบาย: จัดการ Caching เพื่อให้ใช้งาน Offline ได้
 // Description: Service Worker for caching assets and enabling offline functionality.
 
-const CACHE_NAME = 'my-fee-v2';
+const CACHE_NAME = 'my-fee-v3';
 
 // รายชื่อไฟล์ที่ต้องการให้ Cache (รวมถึง CDN ภายนอกด้วย)
 const ASSETS_TO_CACHE = [
