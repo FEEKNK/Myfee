@@ -1,0 +1,25 @@
+{
+  "name": "myfee",
+  "version": "1.0.0",
+  "description": "**MY FEE** คือแอปพลิเคชันผู้ช่วยส่วนตัวในชีวิตประจำวัน (Personal All-in-One Life Companion) ที่สร้างขึ้นมาเพื่อตอบโจทย์การใช้งานของตัวเองเป็นหลัก ทำงานแบบ Single Page Application (SPA) ความเร็วสูง จัดเก็บข้อมูลทั้งหมดในเครื่องผ่าน LocalStorage และรองรับการใช้งานออฟไลน์ (PWA) 100%",
+  "main": "data.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "npx tailwindcss -i ./input.css -o ./style.css",
+    "dev:css": "npx tailwindcss -i ./input.css -o ./style.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FEEKNK/Myfee.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FEEKNK/Myfee/issues"
+  },
+  "homepage": "https://github.com/FEEKNK/Myfee#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}
