@@ -22,23 +22,35 @@ function addTransaction(type, category, amount, note, dateStr) {
 
     let finalDate = new Date().toISOString();
     if (dateStr) {
-        // ใช้เวลาปัจจุบันผสมกับวันที่ที่ผู้ใช้เลือก เพื่อให้เรียงลำดับเวลาได้ถูกต้อง
         const d = new Date(dateStr);
         const now = new Date();
         d.setHours(now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
         finalDate = d.toISOString();
     }
 
-    const transaction = {
-        id: Date.now(),
-        type: type,
-        category: category || 'ทั่วไป',
-        amount: numAmount,
-        note: note || '',
-        date: finalDate
-    };
-
-    state.finance.unshift(transaction);
+    if (window.editingFinId) {
+        // Edit existing transaction
+        const existing = state.finance.find(x => x.id === window.editingFinId);
+        if (existing) {
+            existing.type = type;
+            existing.category = category || 'ทั่วไป';
+            existing.amount = numAmount;
+            existing.note = note || '';
+            existing.date = finalDate;
+        }
+        cancelEditTransaction();
+    } else {
+        // Add new transaction
+        const transaction = {
+            id: Date.now(),
+            type: type,
+            category: category || 'ทั่วไป',
+            amount: numAmount,
+            note: note || '',
+            date: finalDate
+        };
+        state.finance.unshift(transaction);
+    }
     
     // เรียงลำดับรายการตามวันที่จากล่าสุดไปเก่าสุด
     state.finance.sort((a, b) => {
@@ -50,7 +62,56 @@ function addTransaction(type, category, amount, note, dateStr) {
     saveFinanceData();
 }
 
+function editTransaction(id) {
+    const item = state.finance.find(x => x.id === id);
+    if (!item) return;
+
+    window.editingFinId = id;
+    
+    const typeEl = document.getElementById('finType');
+    const catEl = document.getElementById('finCat');
+    const amountEl = document.getElementById('finAmount');
+    const noteEl = document.getElementById('finNote');
+    const dateEl = document.getElementById('finDate');
+    const formTitleEl = document.getElementById('finFormTitle');
+    const submitBtnEl = document.getElementById('finSubmitBtn');
+    const cancelBtnEl = document.getElementById('finCancelBtn');
+
+    if (typeEl) typeEl.value = item.type;
+    if (catEl) catEl.value = item.category;
+    if (amountEl) amountEl.value = item.amount;
+    if (noteEl) noteEl.value = item.note || '';
+    if (dateEl && item.date) dateEl.value = item.date.split('T')[0];
+    
+    if (formTitleEl) formTitleEl.textContent = '✏️ แก้ไขรายการ (แก้ย้อนหลัง)';
+    if (submitBtnEl) submitBtnEl.innerHTML = '<i class="fa-solid fa-check mr-1"></i> บันทึกการแก้ไข';
+    if (cancelBtnEl) cancelBtnEl.classList.remove('hidden');
+
+    const formEl = document.getElementById('financeForm');
+    if (formEl) formEl.scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelEditTransaction() {
+    window.editingFinId = null;
+    
+    const amountEl = document.getElementById('finAmount');
+    const noteEl = document.getElementById('finNote');
+    const dateEl = document.getElementById('finDate');
+    const formTitleEl = document.getElementById('finFormTitle');
+    const submitBtnEl = document.getElementById('finSubmitBtn');
+    const cancelBtnEl = document.getElementById('finCancelBtn');
+
+    if (amountEl) amountEl.value = '';
+    if (noteEl) noteEl.value = '';
+    if (dateEl) dateEl.value = new Date().toISOString().split('T')[0];
+    
+    if (formTitleEl) formTitleEl.textContent = 'เพิ่มรายการใหม่';
+    if (submitBtnEl) submitBtnEl.innerHTML = '+ บันทึกรายการ';
+    if (cancelBtnEl) cancelBtnEl.classList.add('hidden');
+}
+
 function deleteTransaction(id) {
+    if (window.editingFinId === id) cancelEditTransaction();
     state.finance = state.finance.filter(item => item.id !== id);
     saveFinanceData();
 }
@@ -195,24 +256,27 @@ function renderFinance() {
 
     listEl.innerHTML = filteredItems.map(item => {
         const isIncome = item.type === 'income';
-        const dateStr = new Date(item.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
+        const dateStr = new Date(item.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
         return `
-            <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center ${isIncome ? 'bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400' : 'bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400'}">
-                        <i class="fa-solid ${isIncome ? 'fa-arrow-down-left' : 'fa-arrow-up-right'}"></i>
+            <div class="flex items-center justify-between p-3.5 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <div class="flex items-center gap-3 min-w-0 flex-1">
+                    <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${isIncome ? 'bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400' : 'bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400'}">
+                        <i class="fa-solid ${isIncome ? 'fa-arrow-down-left text-sm' : 'fa-arrow-up-right text-sm'}"></i>
                     </div>
-                    <div>
-                        <div class="font-bold text-gray-800 dark:text-gray-200 font-thai text-sm">${item.category}</div>
-                        <div class="text-xs text-gray-400 font-thai">${item.note ? item.note + ' • ' : ''}${dateStr}</div>
+                    <div class="min-w-0 flex-1">
+                        <div class="font-bold text-gray-800 dark:text-gray-200 font-thai text-xs truncate">${item.category}</div>
+                        <div class="text-[11px] text-gray-400 font-thai truncate">${item.note ? item.note + ' • ' : ''}${dateStr}</div>
                     </div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <span class="font-bold ${isIncome ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}">
+                <div class="flex items-center gap-2 shrink-0">
+                    <span class="font-bold text-xs ${isIncome ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}">
                         ${isIncome ? '+' : '-'}฿${item.amount.toLocaleString()}
                     </span>
-                    <button onclick="deleteTransaction(${item.id})" class="text-gray-300 hover:text-red-500 transition-colors p-1">
-                        <i class="fa-solid fa-trash-can text-sm"></i>
+                    <button onclick="editTransaction(${item.id})" class="text-gray-400 hover:text-blue-500 transition-colors p-1.5" title="แก้ไขรายการ/แก้ย้อนหลัง">
+                        <i class="fa-solid fa-pen-to-square text-xs"></i>
+                    </button>
+                    <button onclick="deleteTransaction(${item.id})" class="text-gray-300 hover:text-red-500 transition-colors p-1.5" title="ลบรายการ">
+                        <i class="fa-solid fa-trash-can text-xs"></i>
                     </button>
                 </div>
             </div>
@@ -226,15 +290,13 @@ function exportFinanceCSV() {
         return;
     }
     
-    // Create CSV content
-    let csvContent = "data:text/csv;charset=utf-8,\uFEFF"; // Include BOM for Thai characters in Excel
+    let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
     csvContent += "วันที่,ประเภท,หมวดหมู่,จำนวนเงิน,หมายเหตุ\n";
     
     state.finance.forEach(item => {
         const d = new Date(item.date);
         const dateStr = `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
         const typeStr = item.type === 'income' ? 'รายรับ' : 'รายจ่าย';
-        // Escape quotes
         const note = item.note ? item.note.replace(/"/g, '""') : '';
         const row = `"${dateStr}","${typeStr}","${item.category}","${item.amount}","${note}"`;
         csvContent += row + "\n";
@@ -251,6 +313,8 @@ function exportFinanceCSV() {
 
 window.renderFinance = renderFinance;
 window.addTransaction = addTransaction;
+window.editTransaction = editTransaction;
+window.cancelEditTransaction = cancelEditTransaction;
 window.deleteTransaction = deleteTransaction;
 window.changeFinPeriod = changeFinPeriod;
 window.prevFinPeriod = prevFinPeriod;
