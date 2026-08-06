@@ -6,8 +6,8 @@ let breathingPhase = 0; // 0=Inhale, 1=Hold, 2=Exhale, 3=Hold
 let isBreathingActive = false;
 
 const PHASES = [
-    { text: 'สูดหายใจเข้าลึกๆ...', duration: 4000, scale: 'scale-150', color: 'bg-cyan-400' },
-    { text: 'กลั้นหายใจ...', duration: 4000, scale: 'scale-150', color: 'bg-cyan-500' },
+    { text: 'สูดหายใจเข้าลึกๆ...', duration: 4000, scale: 'scale-125', color: 'bg-cyan-400' },
+    { text: 'กลั้นหายใจ...', duration: 4000, scale: 'scale-125', color: 'bg-cyan-500' },
     { text: 'ค่อยๆ ผ่อนหายใจออก...', duration: 4000, scale: 'scale-100', color: 'bg-blue-400' },
     { text: 'กลั้นหายใจ...', duration: 4000, scale: 'scale-100', color: 'bg-blue-500' }
 ];
@@ -35,7 +35,7 @@ function toggleBreathing() {
         
         clearTimeout(breathingInterval);
         if (circle) {
-            circle.className = 'w-48 h-48 rounded-full bg-gray-200 dark:bg-gray-700 shadow-xl transition-all duration-[4000ms] ease-in-out flex items-center justify-center relative scale-100';
+            circle.className = 'w-44 h-44 rounded-full bg-gray-200 dark:bg-gray-700 shadow-xl transition-all duration-[4000ms] ease-in-out flex items-center justify-center relative scale-100';
         }
         if (text) text.textContent = 'พร้อมหรือยัง?';
     }
@@ -48,7 +48,7 @@ function runBreathingCycle(circle, text) {
     
     if (text) text.textContent = phase.text;
     if (circle) {
-        circle.className = `w-48 h-48 rounded-full ${phase.color} shadow-[0_0_40px_rgba(34,211,238,0.4)] transition-all duration-[4000ms] ease-in-out flex items-center justify-center relative ${phase.scale}`;
+        circle.className = `w-44 h-44 rounded-full ${phase.color} shadow-[0_0_40px_rgba(34,211,238,0.4)] transition-all duration-[4000ms] ease-in-out flex items-center justify-center relative ${phase.scale}`;
     }
 
     breathingInterval = setTimeout(() => {
@@ -77,22 +77,22 @@ function renderBreathing() {
             </div>
         </header>
         
-        <main class="max-w-md mx-auto w-full p-6 flex flex-col items-center justify-center flex-1 h-[calc(100vh-160px)]">
+        <main class="max-w-md mx-auto w-full p-4 flex flex-col items-center justify-center space-y-6 py-6 pb-28">
             
-            <div class="text-center mb-16">
-                <h2 class="text-2xl font-bold font-thai text-gray-800 dark:text-white mb-2">Box Breathing</h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400 font-thai">เทคนิคการหายใจแบบ 4-4-4-4 เพื่อลดความเครียดและเพิ่มสมาธิ</p>
+            <div class="text-center">
+                <h2 class="text-xl font-bold font-thai text-gray-800 dark:text-white mb-1">Box Breathing</h2>
+                <p class="text-xs text-gray-500 dark:text-gray-400 font-thai px-4">เทคนิคการหายใจแบบ 4-4-4-4 เพื่อลดความเครียดและเพิ่มสมาธิ</p>
             </div>
 
-            <div class="relative w-64 h-64 flex items-center justify-center mb-16">
-                <div id="breatheCircle" class="w-48 h-48 rounded-full bg-gray-200 dark:bg-gray-700 shadow-inner transition-all duration-[4000ms] ease-in-out flex items-center justify-center relative z-10">
-                    <i class="fa-solid fa-lungs text-4xl text-white/50"></i>
+            <div class="relative w-60 h-60 flex items-center justify-center my-4">
+                <div id="breatheCircle" class="w-44 h-44 rounded-full bg-gray-200 dark:bg-gray-700 shadow-inner transition-all duration-[4000ms] ease-in-out flex items-center justify-center relative z-10">
+                    <i class="fa-solid fa-lungs text-3xl text-white/60"></i>
                 </div>
             </div>
 
-            <h3 id="breatheText" class="text-xl font-bold text-cyan-600 dark:text-cyan-400 font-thai h-8 mb-8 transition-opacity duration-500">พร้อมหรือยัง?</h3>
+            <h3 id="breatheText" class="text-lg font-bold text-cyan-600 dark:text-cyan-400 font-thai h-6 text-center transition-opacity duration-500">พร้อมหรือยัง?</h3>
 
-            <button id="breatheToggleBtn" onclick="toggleBreathing()" class="w-64 py-4 bg-cyan-500 hover:bg-cyan-600 text-white font-bold rounded-2xl shadow-lg transition-all font-thai text-lg">
+            <button id="breatheToggleBtn" onclick="toggleBreathing()" class="w-full max-w-xs py-3.5 bg-cyan-500 hover:bg-cyan-600 text-white font-bold rounded-2xl shadow-lg transition-all font-thai text-base">
                 เริ่มฝึกหายใจ (Start)
             </button>
             

@@ -85,29 +85,29 @@ function renderPomodoro() {
             </div>
         </header>
         
-        <main class="max-w-md mx-auto w-full p-6 flex flex-col items-center justify-center flex-1 h-[calc(100vh-160px)]">
+        <main class="max-w-md mx-auto w-full p-4 flex flex-col items-center justify-center space-y-6 py-6 pb-28">
             
-            <div class="flex gap-2 mb-8 bg-gray-100 dark:bg-gray-800 p-1 rounded-full shadow-inner">
-                <button onclick="setPomoMode('work')" class="px-6 py-2 rounded-full font-thai text-sm font-bold transition-colors ${pomoMode === 'work' ? 'bg-white dark:bg-gray-700 text-red-500 shadow-sm' : 'text-gray-400'}">โฟกัส 25 นาที</button>
-                <button onclick="setPomoMode('break')" class="px-6 py-2 rounded-full font-thai text-sm font-bold transition-colors ${pomoMode === 'break' ? 'bg-white dark:bg-gray-700 text-teal-500 shadow-sm' : 'text-gray-400'}">พัก 5 นาที</button>
+            <div class="flex gap-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-full shadow-inner">
+                <button onclick="setPomoMode('work')" class="px-5 py-2 rounded-full font-thai text-xs font-bold transition-colors ${pomoMode === 'work' ? 'bg-white dark:bg-gray-700 text-red-500 shadow-sm' : 'text-gray-400'}">โฟกัส 25 นาที</button>
+                <button onclick="setPomoMode('break')" class="px-5 py-2 rounded-full font-thai text-xs font-bold transition-colors ${pomoMode === 'break' ? 'bg-white dark:bg-gray-700 text-teal-500 shadow-sm' : 'text-gray-400'}">พัก 5 นาที</button>
             </div>
 
-            <div class="w-64 h-64 rounded-full bg-gradient-to-br ${bgClass} shadow-2xl flex flex-col items-center justify-center text-white relative mb-8">
+            <div class="w-56 h-56 rounded-full bg-gradient-to-br ${bgClass} shadow-2xl flex flex-col items-center justify-center text-white relative my-2">
                 <div class="absolute inset-2 border-4 border-white/20 rounded-full border-dashed"></div>
-                <h2 id="pomoTitle" class="text-lg font-bold font-thai mb-2">${pomoMode === 'work' ? '🧠 โฟกัสทำงาน' : '☕ พักผ่อน'}</h2>
-                <div id="pomoDisplay" class="text-6xl font-black font-mono tracking-widest leading-none">${formatPomoTime(pomoTimeLeft)}</div>
+                <h2 id="pomoTitle" class="text-base font-bold font-thai mb-1">${pomoMode === 'work' ? '🧠 โฟกัสทำงาน' : '☕ พักผ่อน'}</h2>
+                <div id="pomoDisplay" class="text-5xl font-black font-mono tracking-widest leading-none">${formatPomoTime(pomoTimeLeft)}</div>
             </div>
 
-            <div class="flex gap-4">
-                <button id="pomoToggleBtn" onclick="togglePomoTimer()" class="w-32 py-4 bg-white dark:bg-gray-800 text-gray-800 dark:text-white rounded-2xl shadow-lg font-bold text-lg hover:scale-105 transition-transform flex items-center justify-center gap-2">
+            <div class="flex gap-3">
+                <button id="pomoToggleBtn" onclick="togglePomoTimer()" class="w-32 py-3.5 bg-white dark:bg-gray-800 text-gray-800 dark:text-white rounded-2xl shadow-lg font-bold text-base hover:scale-105 transition-transform flex items-center justify-center gap-2">
                     ${isPomoRunning ? '<i class="fa-solid fa-pause" id="pomoToggleIcon"></i> พัก' : '<i class="fa-solid fa-play" id="pomoToggleIcon"></i> เริ่ม'}
                 </button>
-                <button onclick="setPomoMode(pomoMode)" class="w-16 py-4 bg-white dark:bg-gray-800 text-gray-400 rounded-2xl shadow-lg hover:text-gray-800 dark:hover:text-white transition-colors flex items-center justify-center">
-                    <i class="fa-solid fa-rotate-right text-xl"></i>
+                <button onclick="setPomoMode(pomoMode)" class="w-14 py-3.5 bg-white dark:bg-gray-800 text-gray-400 rounded-2xl shadow-lg hover:text-gray-800 dark:hover:text-white transition-colors flex items-center justify-center">
+                    <i class="fa-solid fa-rotate-right text-lg"></i>
                 </button>
             </div>
 
-            <p id="pomoSessions" class="mt-8 font-thai text-gray-400 dark:text-gray-500 font-bold">รอบที่สำเร็จ: ${pomoSessions}</p>
+            <p id="pomoSessions" class="font-thai text-gray-400 dark:text-gray-500 font-bold text-sm">รอบที่สำเร็จ: ${pomoSessions}</p>
         </main>
     `;
     

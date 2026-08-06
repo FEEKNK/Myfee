@@ -169,11 +169,11 @@ function renderProjectDetail(id) {
     let html = `
         <header class="bg-white dark:bg-gray-800 shadow-sm p-4 z-20 sticky top-0 transition-colors duration-300">
             <div class="max-w-md mx-auto flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <button onclick="renderProjects()" class="p-2 text-gray-400 hover:text-indigo-600 transition-colors" title="Back">
+                <div class="flex items-center gap-2 flex-1 min-w-0">
+                    <button onclick="renderProjects()" class="p-2 text-gray-400 hover:text-indigo-600 transition-colors shrink-0" title="Back">
                         <i class="fa-solid fa-arrow-left text-xl"></i>
                     </button>
-                    <h1 class="text-lg font-bold text-gray-800 dark:text-white font-thai truncate w-48">${p.name}</h1>
+                    <h1 class="text-base font-bold text-gray-800 dark:text-white font-thai truncate flex-1 min-w-0">${p.name}</h1>
                 </div>
                 <button onclick="if(confirm('ยืนยันการลบโปรเจกต์นี้?')) { deleteProject(${p.id}); renderProjects(); }" class="text-red-500 p-2">
                     <i class="fa-solid fa-trash-can"></i>
