@@ -35,7 +35,12 @@ let state = {
         { id: 1, name: 'อ่านหนังสือ 15 นาที', icon: 'fa-book', streak: 0, lastCompleted: null, routine: 'morning', history: [] },
         { id: 2, name: 'ออกกำลังกาย 20 นาที', icon: 'fa-person-running', streak: 0, lastCompleted: null, routine: 'afternoon', history: [] },
         { id: 3, name: 'นั่งสมาธิ 5 นาที', icon: 'fa-brain', streak: 0, lastCompleted: null, routine: 'evening', history: [] }
-    ]
+    ],
+    // Roadmap Features State
+    projects: JSON.parse(localStorage.getItem('projectsData')) || [],
+    notes: JSON.parse(localStorage.getItem('notesData')) || [],
+    countdown: JSON.parse(localStorage.getItem('countdownData')) || [],
+    goals: JSON.parse(localStorage.getItem('goalsData')) || []
 };
 
 // Combine allData with customCards immediately

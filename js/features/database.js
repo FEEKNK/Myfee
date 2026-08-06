@@ -17,7 +17,11 @@ function exportDatabase() {
                 waterData: JSON.parse(localStorage.getItem('waterData')) || {},
                 habitData: JSON.parse(localStorage.getItem('habitData')) || [],
                 customCards: JSON.parse(localStorage.getItem('customCards')) || [],
-                reviewCards: JSON.parse(localStorage.getItem('reviewCards')) || []
+                reviewCards: JSON.parse(localStorage.getItem('reviewCards')) || [],
+                projectsData: JSON.parse(localStorage.getItem('projectsData')) || [],
+                notesData: JSON.parse(localStorage.getItem('notesData')) || [],
+                countdownData: JSON.parse(localStorage.getItem('countdownData')) || [],
+                goalsData: JSON.parse(localStorage.getItem('goalsData')) || []
             }
         };
 
@@ -72,6 +76,10 @@ function importDatabase(event) {
                 if (data.financeData) localStorage.setItem('financeData', JSON.stringify(data.financeData));
                 if (data.waterData) localStorage.setItem('waterData', JSON.stringify(data.waterData));
                 if (data.habitData) localStorage.setItem('habitData', JSON.stringify(data.habitData));
+                if (data.projectsData) localStorage.setItem('projectsData', JSON.stringify(data.projectsData));
+                if (data.notesData) localStorage.setItem('notesData', JSON.stringify(data.notesData));
+                if (data.countdownData) localStorage.setItem('countdownData', JSON.stringify(data.countdownData));
+                if (data.goalsData) localStorage.setItem('goalsData', JSON.stringify(data.goalsData));
 
                 // Update state memory
                 state.learned = JSON.parse(localStorage.getItem('learnedCards')) || [];
@@ -82,6 +90,10 @@ function importDatabase(event) {
                 state.finance = JSON.parse(localStorage.getItem('financeData')) || [];
                 state.water = JSON.parse(localStorage.getItem('waterData')) || { goal: 2000, current: 0, lastDate: new Date().toLocaleDateString() };
                 state.habits = JSON.parse(localStorage.getItem('habitData')) || [];
+                state.projects = JSON.parse(localStorage.getItem('projectsData')) || [];
+                state.notes = JSON.parse(localStorage.getItem('notesData')) || [];
+                state.countdown = JSON.parse(localStorage.getItem('countdownData')) || [];
+                state.goals = JSON.parse(localStorage.getItem('goalsData')) || [];
 
                 // Refresh UI
                 if (typeof applySettings === 'function') applySettings();
@@ -89,6 +101,10 @@ function importDatabase(event) {
                 if (typeof renderFinance === 'function') renderFinance();
                 if (typeof renderWater === 'function') renderWater();
                 if (typeof renderHabits === 'function') renderHabits();
+                if (typeof renderProjects === 'function') renderProjects();
+                if (typeof renderNotes === 'function') renderNotes();
+                if (typeof renderCountdown === 'function') renderCountdown();
+                if (typeof renderGoals === 'function') renderGoals();
                 if (typeof updateDashboard === 'function') updateDashboard();
                 if (typeof renderDatabaseStats === 'function') renderDatabaseStats();
 
@@ -103,7 +119,7 @@ function importDatabase(event) {
 }
 
 function clearAllDatabase() {
-    if (confirm('⚠️ เตือนภัย! คุณต้องการลบฐานข้อมูลทั้งหมดในเครื่องใช่หรือไม่?\n\nข้อมูล Flashcards, To-Do, รายรับ-รายจ่าย, การดื่มน้ำ และ นิสัย จะถูกลบทิ้งทั้งหมด!')) {
+    if (confirm('⚠️ เตือนภัย! คุณต้องการลบฐานข้อมูลทั้งหมดในเครื่องใช่หรือไม่?\n\nข้อมูลแอปทั้งหมดของคุณจะถูกลบทิ้งอย่างถาวร!')) {
         const doubleCheck = prompt('กรุณาพิมพ์ "DELETE" เพื่อยืนยันการลบฐานข้อมูลทิ้ง');
         if (doubleCheck === 'DELETE') {
             localStorage.clear();
@@ -117,7 +133,7 @@ function renderDatabaseStats() {
     if (!statsContainer) return;
 
     let totalBytes = 0;
-    const keys = ['learnedCards', 'favCards', 'appSettings', 'streakData', 'todoData', 'financeData', 'waterData', 'habitData'];
+    const keys = ['learnedCards', 'favCards', 'appSettings', 'streakData', 'todoData', 'financeData', 'waterData', 'habitData', 'projectsData', 'notesData', 'countdownData', 'goalsData'];
     
     keys.forEach(key => {
         const item = localStorage.getItem(key);

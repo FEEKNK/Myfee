@@ -208,6 +208,72 @@
                             <div class="text-[11px] text-gray-400 font-thai">Settings</div>
                         </div>
                     </button>
+
+                    <!-- Projects -->
+                    <button onclick="switchTab('projects')" class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:scale-[1.02] transition-transform text-left">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-folder-tree"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">โปรเจกต์</div>
+                            <div class="text-[11px] text-gray-400 font-thai">Projects</div>
+                        </div>
+                    </button>
+
+                    <!-- Notes -->
+                    <button onclick="switchTab('notes')" class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:scale-[1.02] transition-transform text-left">
+                        <div class="w-10 h-10 rounded-xl bg-yellow-100 text-yellow-600 dark:bg-yellow-900/40 dark:text-yellow-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-note-sticky"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">โน้ตด่วน</div>
+                            <div class="text-[11px] text-gray-400 font-thai">Notes & Mood</div>
+                        </div>
+                    </button>
+
+                    <!-- Pomodoro -->
+                    <button onclick="switchTab('pomodoro')" class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:scale-[1.02] transition-transform text-left">
+                        <div class="w-10 h-10 rounded-xl bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-stopwatch"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">Pomodoro</div>
+                            <div class="text-[11px] text-gray-400 font-thai">โฟกัสจับเวลา</div>
+                        </div>
+                    </button>
+
+                    <!-- Countdown -->
+                    <button onclick="switchTab('countdown')" class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:scale-[1.02] transition-transform text-left">
+                        <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-900/40 dark:text-purple-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-calendar-days"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">นับถอยหลัง</div>
+                            <div class="text-[11px] text-gray-400 font-thai">Countdown</div>
+                        </div>
+                    </button>
+
+                    <!-- Goals -->
+                    <button onclick="switchTab('goals')" class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:scale-[1.02] transition-transform text-left">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-piggy-bank"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">ออมเงิน</div>
+                            <div class="text-[11px] text-gray-400 font-thai">Savings Goals</div>
+                        </div>
+                    </button>
+
+                    <!-- Breathing -->
+                    <button onclick="switchTab('breathing')" class="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:scale-[1.02] transition-transform text-left">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 dark:bg-cyan-900/40 dark:text-cyan-400 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-lungs"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm text-gray-800 dark:text-gray-200 font-thai">ฝึกหายใจ</div>
+                            <div class="text-[11px] text-gray-400 font-thai">Breathing</div>
+                        </div>
+                    </button>
                 </div>
             </div>
         </main>
@@ -530,8 +596,11 @@
             </div>
 
             <!-- Add Transaction Form -->
-            <form id="financeForm" onsubmit="event.preventDefault(); addTransaction(document.getElementById('finType').value, document.getElementById('finCat').value, document.getElementById('finAmount').value, document.getElementById('finNote').value); document.getElementById('finAmount').value=''; document.getElementById('finNote').value='';" class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-3">
-                <h3 class="font-bold text-sm text-gray-700 dark:text-gray-300 font-thai">เพิ่มรายการใหม่</h3>
+            <form id="financeForm" onsubmit="event.preventDefault(); addTransaction(document.getElementById('finType').value, document.getElementById('finCat').value, document.getElementById('finAmount').value, document.getElementById('finNote').value, document.getElementById('finDate').value); document.getElementById('finAmount').value=''; document.getElementById('finNote').value='';" class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-3">
+                <h3 class="font-bold text-sm text-gray-700 dark:text-gray-300 font-thai flex justify-between items-center">
+                    <span>เพิ่มรายการใหม่</span>
+                    <input type="date" id="finDate" required class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg text-xs font-thai focus:outline-none cursor-pointer">
+                </h3>
                 <div class="grid grid-cols-2 gap-2">
                     <select id="finType" class="px-3 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-xl text-sm font-thai focus:outline-none">
                         <option value="expense">🔴 รายจ่าย (Expense)</option>
@@ -554,6 +623,10 @@
                     + บันทึกรายการ
                 </button>
             </form>
+            <script>
+                // ตั้งค่าเริ่มต้นของวันที่เป็นวันปัจจุบัน
+                document.getElementById('finDate').value = new Date().toISOString().split('T')[0];
+            </script>
 
             <!-- Transaction List -->
             <div class="space-y-2">
@@ -790,6 +863,16 @@
     </div>
 
     <!-- ============================================== -->
+    <!-- NEW FEATURES (ROADMAP)                         -->
+    <!-- ============================================== -->
+    <div id="view-projects" class="flex-1 flex flex-col hidden h-full w-full overflow-y-auto pb-24 bg-gray-50 dark:bg-gray-900 relative"></div>
+    <div id="view-notes" class="flex-1 flex flex-col hidden h-full w-full overflow-y-auto pb-24 bg-gray-50 dark:bg-gray-900 relative"></div>
+    <div id="view-pomodoro" class="flex-1 flex flex-col hidden h-full w-full overflow-y-auto pb-24 bg-gray-50 dark:bg-gray-900 relative"></div>
+    <div id="view-countdown" class="flex-1 flex flex-col hidden h-full w-full overflow-y-auto pb-24 bg-gray-50 dark:bg-gray-900 relative"></div>
+    <div id="view-goals" class="flex-1 flex flex-col hidden h-full w-full overflow-y-auto pb-24 bg-gray-50 dark:bg-gray-900 relative"></div>
+    <div id="view-breathing" class="flex-1 flex flex-col hidden h-full w-full overflow-y-auto pb-24 bg-gray-50 dark:bg-gray-900 relative"></div>
+
+    <!-- ============================================== -->
     <!-- FIXED BOTTOM NAVIGATION DOCK                   -->
     <!-- ============================================== -->
     <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-t border-gray-200/50 dark:border-gray-700/50 max-w-md mx-auto px-2 py-1">
@@ -834,6 +917,12 @@
     <script src="./js/flashcards/quiz.js"></script>
     <script src="./js/flashcards/flashcards.js"></script>
     <script src="./js/features/database.js"></script>
+    <script src="./js/features/projects.js"></script>
+    <script src="./js/features/notes.js"></script>
+    <script src="./js/features/pomodoro.js"></script>
+    <script src="./js/features/countdown.js"></script>
+    <script src="./js/features/goals.js"></script>
+    <script src="./js/features/breathing.js"></script>
     <script src="./js/main.js"></script>
     <script>
         if ('serviceWorker' in navigator) {

@@ -13,23 +13,40 @@ function saveFinanceData() {
     if (typeof updateDashboard === 'function') updateDashboard();
 }
 
-function addTransaction(type, category, amount, note) {
+function addTransaction(type, category, amount, note, dateStr) {
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) {
         alert('กรุณากรอกจำนวนเงินให้ถูกต้อง');
         return;
     }
 
+    let finalDate = new Date().toISOString();
+    if (dateStr) {
+        // ใช้เวลาปัจจุบันผสมกับวันที่ที่ผู้ใช้เลือก เพื่อให้เรียงลำดับเวลาได้ถูกต้อง
+        const d = new Date(dateStr);
+        const now = new Date();
+        d.setHours(now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
+        finalDate = d.toISOString();
+    }
+
     const transaction = {
         id: Date.now(),
-        type: type, // 'income' or 'expense'
+        type: type,
         category: category || 'ทั่วไป',
         amount: numAmount,
         note: note || '',
-        date: new Date().toISOString()
+        date: finalDate
     };
 
     state.finance.unshift(transaction);
+    
+    // เรียงลำดับรายการตามวันที่จากล่าสุดไปเก่าสุด
+    state.finance.sort((a, b) => {
+        const dateA = a.date ? new Date(a.date) : new Date(0);
+        const dateB = b.date ? new Date(b.date) : new Date(0);
+        return dateB - dateA;
+    });
+
     saveFinanceData();
 }
 
