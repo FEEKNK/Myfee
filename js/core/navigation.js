@@ -1,7 +1,7 @@
 // FILE: js/navigation.js
 // --- Navigation ---
 function switchTab(tabId) {
-    const views = ['home', 'flashcards', 'settings', 'todo', 'finance', 'habit', 'projects', 'notes', 'pomodoro', 'countdown', 'goals', 'breathing'];
+    const views = ['home', 'flashcards', 'settings', 'todo', 'finance', 'habit', 'projects', 'notes', 'pomodoro', 'countdown', 'goals', 'breathing', 'code-reading'];
     views.forEach(v => {
         const viewEl = document.getElementById(`view-${v}`);
         if (viewEl) viewEl.classList.add('hidden');
@@ -45,6 +45,8 @@ function switchTab(tabId) {
         renderGoals();
     } else if (tabId === 'breathing' && typeof renderBreathing === 'function') {
         renderBreathing();
+    } else if (tabId === 'code-reading' && typeof crInit === 'function') {
+        crInit();
     }
 }
 window.switchTab = switchTab;
