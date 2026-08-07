@@ -1,8 +1,7 @@
 // FILE: js/features/dashboard.js
 // --- Life Dashboard & Analytics ---
 
-let focusTimer = null;
-let focusTimeLeft = 25 * 60; // 25 mins
+
 
 function updateDashboard() {
     const today = new Date();
@@ -116,52 +115,6 @@ function updateDashboard() {
     }
 }
 
-// Focus Timer Logic
-function updateFocusDisplay() {
-    const disp = document.getElementById('focusTimerDisplay');
-    if (!disp) return;
-    const m = Math.floor(focusTimeLeft / 60).toString().padStart(2, '0');
-    const s = (focusTimeLeft % 60).toString().padStart(2, '0');
-    disp.textContent = `${m}:${s}`;
-}
 
-function toggleFocusTimer() {
-    const icon = document.getElementById('focusPlayIcon');
-    if (focusTimer) {
-        clearInterval(focusTimer);
-        focusTimer = null;
-        if (icon) { icon.classList.remove('fa-pause'); icon.classList.add('fa-play'); }
-    } else {
-        if (icon) { icon.classList.remove('fa-play'); icon.classList.add('fa-pause'); }
-        focusTimer = setInterval(() => {
-            if (focusTimeLeft > 0) {
-                focusTimeLeft--;
-                updateFocusDisplay();
-            } else {
-                clearInterval(focusTimer);
-                focusTimer = null;
-                if (icon) { icon.classList.remove('fa-pause'); icon.classList.add('fa-play'); }
-                // Notification (Vibration/Alert)
-                if ("vibrate" in navigator) navigator.vibrate([200, 100, 200]);
-                alert("หมดเวลา Focus แล้ว! พักสายตาหน่อยนะ");
-                focusTimeLeft = 25 * 60;
-                updateFocusDisplay();
-            }
-        }, 1000);
-    }
-}
-
-function resetFocusTimer() {
-    if (focusTimer) {
-        clearInterval(focusTimer);
-        focusTimer = null;
-        const icon = document.getElementById('focusPlayIcon');
-        if (icon) { icon.classList.remove('fa-pause'); icon.classList.add('fa-play'); }
-    }
-    focusTimeLeft = 25 * 60;
-    updateFocusDisplay();
-}
 
 window.updateDashboard = updateDashboard;
-window.toggleFocusTimer = toggleFocusTimer;
-window.resetFocusTimer = resetFocusTimer;
